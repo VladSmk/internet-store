@@ -2,10 +2,8 @@ package ua.internet.store.dao;
 
 import org.springframework.stereotype.Component;
 import ua.internet.store.model.Product;
-
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class StoreDAO {
@@ -58,6 +56,5 @@ public class StoreDAO {
             throw new RuntimeException(e);
         }
     }
-
 
 }

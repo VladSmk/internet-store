@@ -2,7 +2,6 @@ package ua.internet.store.dao;
 
 import org.springframework.stereotype.Component;
 import ua.internet.store.model.User;
-
 import java.sql.*;
 
 @Component
@@ -54,29 +53,22 @@ public class UserDAO {
         }
     }
 
-    public User searchAccountByName(String accountName){
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        User user = null;
-        try {
-            preparedStatement = connection.prepareStatement(
-                    "SELECT * FROM internetshop.users WHERE username=?;"
-            );
-            preparedStatement.setString(1, accountName);
-            resultSet = preparedStatement.executeQuery();
-            user.setAccountId(resultSet.getInt("id"));
-            user.setAccountName(resultSet.getString("username"));
-            user.setAccountPassword(resultSet.getString("password"));
-            return user;
-        } catch (SQLException e) {
-            System.out.println("Error in searchAccountByName");
-            throw new RuntimeException(e);
-        }
-    }
-
-
-
-
-
-
+//    public boolean signInAccountWithDb(User user) {
+//        PreparedStatement preparedStatement = null;
+//        try {
+//            preparedStatement = connection.prepareStatement(
+//                    "SELECT * FROM internetshop.users WHERE username=? and password=?;"
+//            );
+//            preparedStatement.setString(1, user.getAccountName());
+//            preparedStatement.setString(2, user.getAccountPassword());
+//            ResultSet resultSet = preparedStatement.executeQuery();
+//            if(resultSet.next())
+//                return true;
+//            else
+//                return false;
+//        } catch (SQLException e) {
+//            System.out.println("Error in signInAccountWithDb(UserDAO)");
+//            throw new RuntimeException(e);
+//        }
+//    }
 }

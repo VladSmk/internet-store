@@ -13,27 +13,33 @@
                 flex-direction: row;
                 margin-right: 0;
                 margin-left: auto;
-                margin-top: 30px;
+                margin-top: 15px;
             }
             .button-padding{
                 padding-right: 10px;
             }
+            .text-internet-store{
+                margin-top: 10px;
+                margin-left: 670px;
+                font-size: 30px;
+                font-weight: bold;
+            }
             .location-center{
-                margin-left: 600px;
+                text-align: center;
             }
         </style>
     </head>
     <body>
 
     <div class="in-one-line">
-        <div >
-            <h1 class="location-center"> Internet Store</h1>
+        <div class="text-internet-store">
+            <a>Internet Store</a>
         </div>
         <div class="two-buttons-signIn-signUp">
-            <form class="button-padding" th:action="@{/store/signin}">
+            <form class="button-padding" th:action="@{/user/signIn}">
                 <input type="submit" value="Sign in">
             </form>
-            <form class="button-padding" th:action="@{/store/signup}">
+            <form class="button-padding" th:action="@{/user/signUp}">
                 <input type="submit" value="Sign up">
             </form>
         </div>
@@ -41,7 +47,7 @@
 
 
     <br>
-    <div th:each="pitem : ${allProductsList}">
+    <div class="location-center" th:each="pitem : ${allProductsList}">
         <h2 th:text=" ${pitem.getName() + ', ' + pitem.getPrice() + '$'}" >text</h2>
     </div>
 

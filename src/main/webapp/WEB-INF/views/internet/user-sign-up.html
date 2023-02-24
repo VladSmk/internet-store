@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+    <style>
+        .location-center{text-align: center}
+    </style>
+</head>
+<body>
+
+<form class="location-center" th:method="POST" th:action="@{/user}" th:object="${newUser}" >
+    <h1>Sign Up</h1>
+    <br>
+    <br>
+    <label for="aN">Enter account name: </label>
+    <input type="text" th:field="*{accountName}" id="aN">
+    <br>
+    <br>
+    <label for="aP">Enter account password: </label>
+    <input type="text" th:field="*{accountPassword}" id="aP">
+    <br>
+    <br>
+    <input type="submit" value="Sign up!">
+</form>
+
+</body>
+</html>
