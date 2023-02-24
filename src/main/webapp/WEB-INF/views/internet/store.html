@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Store</title>
+        <style>
+            .in-one-line{
+                display: flex;
+                flex-direction: row;
+            }
+            .two-buttons-signIn-signUp{
+                display: flex;
+                flex-direction: row;
+                margin-right: 0;
+                margin-left: auto;
+                margin-top: 30px;
+            }
+            .button-padding{
+                padding-right: 10px;
+            }
+            .location-center{
+                margin-left: 600px;
+            }
+        </style>
+    </head>
+    <body>
+
+    <div class="in-one-line">
+        <div >
+            <h1 class="location-center"> Internet Store</h1>
+        </div>
+        <div class="two-buttons-signIn-signUp">
+            <form class="button-padding" th:action="@{/store/signin}">
+                <input type="submit" value="Sign in">
+            </form>
+            <form class="button-padding" th:action="@{/store/signup}">
+                <input type="submit" value="Sign up">
+            </form>
+        </div>
+    </div>
+
+
+    <br>
+    <div th:each="pitem : ${allProductsList}">
+        <h2 th:text=" ${pitem.getName() + ', ' + pitem.getPrice() + '$'}" >text</h2>
+    </div>
+
+    </body>
+</html>

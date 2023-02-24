@@ -1,9 +1,8 @@
 package ua.internet.store.dao;
 
 import org.springframework.stereotype.Component;
-import ua.internet.store.model.Users;
+import ua.internet.store.model.User;
 
-import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 
 @Component
@@ -29,7 +28,7 @@ public class UserDAO {
         }
     }
 
-    public void saveAccountInDb(Users user){
+    public void signUpNewAccountInDb(User user){
         PreparedStatement preparedStatement = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -54,6 +53,30 @@ public class UserDAO {
             throw new RuntimeException(e);
         }
     }
+
+    public User searchAccountByName(String accountName){
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        User user = null;
+        try {
+            preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM internetshop.users WHERE username=?;"
+            );
+            preparedStatement.setString(1, accountName);
+            resultSet = preparedStatement.executeQuery();
+            user.setAccountId(resultSet.getInt("id"));
+            user.setAccountName(resultSet.getString("username"));
+            user.setAccountPassword(resultSet.getString("password"));
+            return user;
+        } catch (SQLException e) {
+            System.out.println("Error in searchAccountByName");
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+
 
 
 }

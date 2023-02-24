@@ -2,26 +2,13 @@ package ua.internet.store.model;
 
 import javax.validation.constraints.NotNull;
 
-public class Users {
+public class User {
     @NotNull
     private int accountId;
     @NotNull
     private String accountName;
     @NotNull
     private String accountPassword;
-    public Users(){
-
-    }
-
-    public Users(int accountId) {
-        this.accountId = accountId;
-    }
-
-    public Users(int accountId, String accountName, String accountPassword) {
-        this.accountId = accountId;
-        this.accountName = accountName;
-        this.accountPassword = accountPassword;
-    }
 
     public int getAccountId() {
         return accountId;
