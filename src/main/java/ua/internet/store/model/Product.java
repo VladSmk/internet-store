@@ -1,19 +1,17 @@
 package ua.internet.store.model;
 
-import javax.validation.constraints.NotNull;
-
 public class Product {
-    @NotNull
+
     private int id;
-    @NotNull
+
     private String name;
     private String description;
-    @NotNull
+
     private double price;
-    @NotNull
+
     private int quantity;
     private  String photo;
-    @NotNull
+
     private int author;
 
     public int getId() {

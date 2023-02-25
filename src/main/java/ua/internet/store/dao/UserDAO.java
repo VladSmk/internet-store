@@ -52,23 +52,22 @@ public class UserDAO {
             throw new RuntimeException(e);
         }
     }
-
-//    public boolean signInAccountWithDb(User user) {
-//        PreparedStatement preparedStatement = null;
-//        try {
-//            preparedStatement = connection.prepareStatement(
-//                    "SELECT * FROM internetshop.users WHERE username=? and password=?;"
-//            );
-//            preparedStatement.setString(1, user.getAccountName());
-//            preparedStatement.setString(2, user.getAccountPassword());
-//            ResultSet resultSet = preparedStatement.executeQuery();
-//            if(resultSet.next())
-//                return true;
-//            else
-//                return false;
-//        } catch (SQLException e) {
-//            System.out.println("Error in signInAccountWithDb(UserDAO)");
-//            throw new RuntimeException(e);
-//        }
-//    }
+    public boolean signInAccountWithDb(User user) {
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM internetshop.users WHERE username=? and password=?;"
+            );
+            preparedStatement.setString(1, user.getAccountName());
+            preparedStatement.setString(2, user.getAccountPassword());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next())
+                return true;
+            else
+                return false;
+        } catch (SQLException e) {
+            System.out.println("Error in signInAccountWithDb(UserDAO)");
+            throw new RuntimeException(e);
+        }
+    }
 }

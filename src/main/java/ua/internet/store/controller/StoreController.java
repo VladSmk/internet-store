@@ -3,13 +3,8 @@ package ua.internet.store.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ua.internet.store.dao.StoreDAO;
-import ua.internet.store.model.User;
-
 
 @Controller
 @RequestMapping("/store")
@@ -26,5 +21,36 @@ public class StoreController {
         model.addAttribute("allProductsList", storeDAO.findAllProduct());
         return "internet/store";
     }
+
+    @GetMapping("/{userId}")
+    public String storePageForSomeUser(@PathVariable("userId") int userId, Model model){
+        model.addAttribute("userId", userId);
+        return "internet/store-USERID";
+    }
+
+
+    @GetMapping("/lookItem/{itemId}")
+    public String storeLookItem(@PathVariable("itemId") int userId, Model model){
+//        model.addAttribute("userId", userId);
+        return "internet/store-lookitem-ITEMID";
+    }
+
+    @GetMapping("/createItem")
+    public String storeCreateItem(Model model){
+        return "internet/store-createitem-USERID";
+    }
+
+    @GetMapping("/myItem/{userId}")
+    public String PageWithUserItemsForSale(@PathVariable("userId") int userId, Model model){
+//        model.addAttribute("userId", userId);
+        return "internet/store-myitem-USERID";
+    }
+
+    @GetMapping("/chi/{itemId}")
+    public String changeItemsForSaleByItemId(@PathVariable("itemId") int userId, Model model){
+//        model.addAttribute("userId", userId);
+        return "internet/store-chi-ITEMID";
+    }
+
 
 }

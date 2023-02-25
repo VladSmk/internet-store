@@ -2,9 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Store</title>
+    <style>
+        .in-one-line{
+            display: flex;
+            flex-direction: row;
+        }
+        .two-buttons-signIn-signUp{
+            display: flex;
+            flex-direction: row;
+            margin-right: 0;
+            margin-left: auto;
+            margin-top: 15px;
+        }
+        .button-padding{
+            padding-right: 10px;
+        }
+        .text-internet-store{
+            margin-top: 10px;
+            margin-left: 670px;
+            font-size: 30px;
+            font-weight: bold;
+        }
+        .location-center{
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
+
+<div class="in-one-line">
+    <div class="text-internet-store">
+        <a>Internet Store</a>
+    </div>
+    <div class="two-buttons-signIn-signUp">
+        <form class="button-padding" th:action="@{/user/settings/${userId}">
+            <input type="submit" value="Account(Settings)">
+        </form>
+        <form class="button-padding" th:action="@{/basket/${userId}">
+            <input type="submit" value="Basket">
+        </form>
+        <form class="button-padding" th:action="@{/store/item/${userId}">
+            <input type="submit" value="My item for sale">
+        </form>
+    </div>
+</div>
+
+
+<br>
+<div class="location-center" th:each="pitem : ${allProductsList}">
+    <h2 th:text=" ${pitem.getName() + ', ' + pitem.getPrice() + '$'}" >text</h2>
+</div>
 
 </body>
 </html>

@@ -9,16 +9,18 @@
 </head>
 <body>
 
-<form class="location-center" th:method="POST" th:action="@{/user}" th:object="${newUser}" >
+<form class="location-center" th:method="POST" th:action="@{/user/postUserSignUp}" th:object="${newUser}" >
     <h1>Sign Up</h1>
     <br>
     <br>
     <label for="aN">Enter account name: </label>
     <input type="text" th:field="*{accountName}" id="aN">
+    <div style="color:red" th:if="${#fields.hasErrors('accountName')}" th:errors="*{accountName}">Name error</div>
     <br>
     <br>
     <label for="aP">Enter account password: </label>
     <input type="text" th:field="*{accountPassword}" id="aP">
+    <div style="color:red" th:if="${#fields.hasErrors('accountPassword')}" th:errors="*{accountPassword}">Password error</div>
     <br>
     <br>
     <input type="submit" value="Sign up!">

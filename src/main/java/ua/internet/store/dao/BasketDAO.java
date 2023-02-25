@@ -1,10 +1,12 @@
 package ua.internet.store.dao;
 
 import org.springframework.stereotype.Component;
+import ua.internet.store.model.Product;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 @Component
 public class BasketDAO {
@@ -28,6 +30,10 @@ public class BasketDAO {
             System.out.println("Error in connection or statement");
             e.printStackTrace();
         }
+    }
+
+    public ArrayList<Product> searchAllUserItemInBasket(int userid){
+        return null;
     }
 
 

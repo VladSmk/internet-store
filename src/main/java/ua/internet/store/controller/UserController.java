@@ -3,14 +3,13 @@ package ua.internet.store.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ua.internet.store.dao.StoreDAO;
 import ua.internet.store.dao.UserDAO;
 import ua.internet.store.model.User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.validation.Valid;
+
 
 @Controller
 @RequestMapping("/user")
@@ -28,13 +27,13 @@ public class UserController {
         return "internet/user-sign-in";
     }
 
-//    @PostMapping()
-//    public String postUserSignIn(@ModelAttribute("testingUser") User user){
-//        if(userDAO.signInAccountWithDb(user))
-//            return "redirect:/store";
-//        else
-//            return "redirect:/user/signIn";
-//    }
+    @GetMapping("/postUserSignIn")
+    public String postUserSignIn(@ModelAttribute("testingUser") User user){
+        if(userDAO.signInAccountWithDb(user))
+            return "redirect:/store";
+        else
+            return "redirect:/user/signIn";
+    }
 
     @GetMapping("/signUp")
     public String UserSignUp(Model model){
@@ -42,10 +41,35 @@ public class UserController {
         return "internet/user-sign-up";
     }
 
-    @PostMapping()
-    public String postUserSignUp(@ModelAttribute("newUser") User user){
+    @PostMapping("/postUserSignUp")
+    public String postUserSignUp(@ModelAttribute("newUser") @Valid User user, BindingResult bindingResult){
+        if (bindingResult.hasErrors())
+            return "internet/user-sign-up";
+
         userDAO.signUpNewAccountInDb(user);
         return "redirect:/store";
     }
+
+    @GetMapping("/settings/{userId}")
+    public String settingsPageForSomeUser(@PathVariable("userId") int userId, Model model){
+        model.addAttribute("userId", userId);
+        return "internet/user-settings-USERID";
+    }
+
+    @GetMapping("/chp/{userId}")
+    public String userSettingChangePassword(@PathVariable("userId") int userId, Model model){
+        model.addAttribute("userId", userId);
+        return "internet/user-chp-USERID";
+    }
+
+    @GetMapping("/chu/{userId}")
+    public String userSettingChangeUsername(@PathVariable("userId") int userId, Model model){
+        model.addAttribute("userId", userId);
+        return "internet/user-chu-USERID";
+    }
+
+
+
+
 
 }

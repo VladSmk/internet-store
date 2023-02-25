@@ -1,11 +1,11 @@
 package ua.internet.store.model;
 
-import javax.validation.constraints.NotNull;
+
 
 public class Basket {
-    @NotNull
+
     private int user_id;
-    @NotNull
+
     private int product_id;
 
     public int getUser_id() {

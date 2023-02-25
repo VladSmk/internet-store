@@ -11,7 +11,8 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+<!--      <version>3.8.1</version>-->
+      <version>4.13.1</version>
       <scope>test</scope>
     </dependency>
 
@@ -55,7 +56,8 @@
     <dependency>
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
-      <version>6.2.2.Final</version>
+      <version>6.2.0.Final</version>
+<!--      <version>8.0.0.Final</version>-->
     </dependency>
 
 
@@ -74,15 +76,5 @@
   </dependencies>
   <build>
     <finalName>internet-store</finalName>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>6</source>
-          <target>6</target>
-        </configuration>
-      </plugin>
-    </plugins>
   </build>
 </project>
