@@ -19,19 +19,26 @@ public class StoreController {
     @GetMapping()
     public String storeFirstPage(Model model){
         model.addAttribute("allProductsList", storeDAO.findAllProduct());
+        model.addAttribute("firstColumn", storeDAO.arrayOfThreeList()[0]);
+        model.addAttribute("secondColumn", storeDAO.arrayOfThreeList()[1]);
+        model.addAttribute("thirdColumn", storeDAO.arrayOfThreeList()[2]);
         return "internet/store";
     }
 
     @GetMapping("/{userId}")
     public String storePageForSomeUser(@PathVariable("userId") int userId, Model model){
-        model.addAttribute("userId", userId);
+        model.addAttribute("wantedUser", storeDAO.searchUserInDbById(userId));
+        model.addAttribute("allProductsList", storeDAO.findAllProduct());
+        model.addAttribute("firstColumn", storeDAO.arrayOfThreeList()[0]);
+        model.addAttribute("secondColumn", storeDAO.arrayOfThreeList()[1]);
+        model.addAttribute("thirdColumn", storeDAO.arrayOfThreeList()[2]);
         return "internet/store-USERID";
     }
 
 
     @GetMapping("/lookItem/{itemId}")
-    public String storeLookItem(@PathVariable("itemId") int userId, Model model){
-//        model.addAttribute("userId", userId);
+    public String storeLookItem(@PathVariable("itemId") int itemId, Model model){
+        model.addAttribute("objProduct", storeDAO.createProductById(itemId));
         return "internet/store-lookitem-ITEMID";
     }
 

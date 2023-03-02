@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Sign In</title>
     <style>
+        body {background-color: lightblue;}
         .location-center{text-align: center}
     </style>
 </head>
@@ -19,7 +20,7 @@
     <br>
     <br>
     <label for="uP">Enter password: </label>
-    <input type="text" th:field="*{accountPassword}" id="uP">
+    <input type="password" th:field="*{accountPassword}" id="uP">
     <br>
     <br>
     <input type="submit" value="Sign in!">

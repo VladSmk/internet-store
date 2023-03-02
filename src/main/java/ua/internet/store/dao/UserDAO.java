@@ -48,7 +48,7 @@ public class UserDAO {
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            System.out.println("Error in saveAccountInDb");
+            System.out.println("Error in signUpNewAccountInDb(UserDAO)");
             throw new RuntimeException(e);
         }
     }
@@ -70,4 +70,22 @@ public class UserDAO {
             throw new RuntimeException(e);
         }
     }
+
+    public int searchIdByName(User user){
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            preparedStatement = connection.prepareStatement(
+                    "SELECT id FROM internetshop.users WHERE username=?;"
+            );
+            preparedStatement.setString(1, user.getAccountName());
+            resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            return resultSet.getInt("id");
+        } catch (SQLException e) {
+            System.out.println("Error in searchIdByName(UserDAO)");
+        }
+        return 0;
+    }
+
 }

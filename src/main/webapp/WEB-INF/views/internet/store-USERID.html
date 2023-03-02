@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Store</title>
     <style>
+        body {background-color: lightblue;}
         .in-one-line{
             display: flex;
             flex-direction: row;
@@ -24,9 +25,14 @@
             font-size: 30px;
             font-weight: bold;
         }
-        .location-center{
-            text-align: center;
+        .padding-left-200{
+            padding-left: 200px;
         }
+        .location-center{
+            margin-left: 370px;
+        }
+
+
     </style>
 </head>
 <body>
@@ -36,23 +42,42 @@
         <a>Internet Store</a>
     </div>
     <div class="two-buttons-signIn-signUp">
-        <form class="button-padding" th:action="@{/user/settings/${userId}">
-            <input type="submit" value="Account(Settings)">
+        <form class="button-padding" th:action="@{/user/settings/{accId}(accId=${wantedUser.getAccountId()})}">
+            <input type="submit" value="Account">
         </form>
-        <form class="button-padding" th:action="@{/basket/${userId}">
+        <form class="button-padding" th:action="@{/basket/{accId}(accId=${wantedUser.getAccountId()})}">
             <input type="submit" value="Basket">
         </form>
-        <form class="button-padding" th:action="@{/store/item/${userId}">
-            <input type="submit" value="My item for sale">
+        <form class="button-padding" th:action="@{/store/myItem/{accId}(accId=${wantedUser.getAccountId()})}">
+            <input type="submit" value="My items for sale">
         </form>
     </div>
+    Username: <a th:text="${wantedUser.getAccountName()}">text</a>
 </div>
 
 
 <br>
-<div class="location-center" th:each="pitem : ${allProductsList}">
-    <h2 th:text=" ${pitem.getName() + ', ' + pitem.getPrice() + '$'}" >text</h2>
+<br>
+<div class="location-center">
+    <div class="in-one-line">
+        <div>
+            <div th:each="pitem : ${firstColumn}">
+                <h2 th:text=" ${pitem.getName() + ', ' + pitem.getPrice() + '$ '}" >text</h2>
+            </div>
+        </div>
+        <div class="padding-left-200">
+            <div th:each="pitem : ${secondColumn}">
+                <h2 th:text=" ${pitem.getName() + ', ' + pitem.getPrice() + '$ '}" >text</h2>
+            </div>
+        </div>
+        <div class="padding-left-200">
+            <div th:each="pitem : ${thirdColumn}">
+                <h2 th:text=" ${pitem.getName() + ', ' + pitem.getPrice() + '$ '}" >text</h2>
+            </div>
+        </div>
+    </div>
 </div>
+
 
 </body>
 </html>

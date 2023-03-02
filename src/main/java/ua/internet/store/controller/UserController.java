@@ -29,10 +29,13 @@ public class UserController {
 
     @GetMapping("/postUserSignIn")
     public String postUserSignIn(@ModelAttribute("testingUser") User user){
-        if(userDAO.signInAccountWithDb(user))
-            return "redirect:/store";
-        else
+        if(userDAO.signInAccountWithDb(user)) {
+            int i = userDAO.searchIdByName(user);
+            return "redirect:/store/" + i;
+        }
+        else {
             return "redirect:/user/signIn";
+        }
     }
 
     @GetMapping("/signUp")

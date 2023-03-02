@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <title>Store</title>
         <style>
+            body {background-color: lightblue;}
             .in-one-line{
                 display: flex;
                 flex-direction: row;
@@ -24,8 +25,12 @@
                 font-size: 30px;
                 font-weight: bold;
             }
-            .location-center{
-                text-align: center;
+
+            .padding-left-200{
+                padding-left: 200px;
+            }
+            .location-center-370px{
+                margin-left: 370px;
             }
         </style>
     </head>
@@ -47,8 +52,25 @@
 
 
     <br>
-    <div class="location-center" th:each="pitem : ${allProductsList}">
-        <h2 th:text=" ${pitem.getName() + ', ' + pitem.getPrice() + '$'}" >text</h2>
+    <br>
+    <div class="location-center-370px">
+        <div class="in-one-line">
+            <div>
+                <div th:each="pitem : ${firstColumn}">
+                    <h2 th:text=" ${pitem.getName() + ', ' + pitem.getPrice() + '$ '}" >text</h2>
+                </div>
+            </div>
+            <div class="padding-left-200">
+                <div th:each="pitem : ${secondColumn}">
+                    <h2 th:text=" ${pitem.getName() + ', ' + pitem.getPrice() + '$ '}" >text</h2>
+                </div>
+            </div>
+            <div class="padding-left-200">
+                <div th:each="pitem : ${thirdColumn}">
+                    <h2 th:text=" ${pitem.getName() + ', ' + pitem.getPrice() + '$ '}" >text</h2>
+                </div>
+            </div>
+        </div>
     </div>
 
     </body>
