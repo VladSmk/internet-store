@@ -40,18 +40,27 @@ public class StoreDAO {
         try {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(
-                    "SELECT * FROM internetshop.product;"
+                        "SELECT * FROM internetshop.product\n" +
+                            "INNER JOIN countries ON product.country_id=countries.country_id \n " +
+                            "INNER JOIN cities ON product.city_id=cities.city_id \n " +
+                            "INNER JOIN users ON product.author_id=users.id \n " +
+                            "INNER JOIN colors ON product.color_id=colors.color_id \n " +
+                            "INNER JOIN firms ON product.firm_id=firms.firm_id \n " +
+                            "INNER JOIN `types` ON product.type_id=`types`.type_id;"
             );
             while (resultSet.next()){
-                Product product = new Product(
-                        resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("description"),
-                        resultSet.getDouble("price"),
-                        resultSet.getInt("quantity"),
-                        resultSet.getString("photo"),
-                        resultSet.getInt("author")
-                );
+                Product product = new Product();
+                product.setId(resultSet.getInt("id"));
+                product.setName(resultSet.getString("name"));
+                product.setDescription(resultSet.getString("description"));
+                product.setPrice(resultSet.getDouble("price"));
+                product.setCountry_id(resultSet.getString("country"));
+                product.setCity_id(resultSet.getString("city"));
+                product.setPhoto(resultSet.getString("photo"));
+                product.setAuthor_id(resultSet.getString("username"));
+                product.setColor_id(resultSet.getString("color"));
+                product.setFirm_id(resultSet.getString("firm"));
+                product.setType_id(resultSet.getString("type"));
                 list.add(product);
             }
             return list;
@@ -61,24 +70,6 @@ public class StoreDAO {
         }
     }
 
-//    public ArrayList<Product>[] arrayOfThreeList(){
-//        ArrayList<Product> arrayList1 = new ArrayList<Product>();
-//        ArrayList<Product> arrayList2 = new ArrayList<Product>();
-//        ArrayList<Product> arrayList3 = new ArrayList<Product>();
-//
-//        Product[] products = findAllProduct().toArray(new Product[findAllProduct().size()]);
-//        for(int i=0; i<products.length; i++){
-//            if(i%3==0) {
-//                arrayList1.add(products[i]);
-//            } else if (i%3==1) {
-//                arrayList2.add(products[i]);
-//            } else {
-//                arrayList3.add(products[i]);
-//            }
-//        }
-//        ArrayList<Product>[] arrayLists = new ArrayList[]{arrayList1, arrayList2, arrayList3};
-//        return arrayLists;
-//    }
     public ArrayList<Product>[] arrayOfThreeList(){
         ArrayList<Product>[] arrayLists = new ArrayList[]{new ArrayList(), new ArrayList(), new ArrayList()};
         Product[] products = findAllProduct().toArray(new Product[findAllProduct().size()]);
@@ -106,6 +97,9 @@ public class StoreDAO {
             wantedUser.setAccountId(resultSet.getInt("id"));
             wantedUser.setAccountName(resultSet.getString("username"));
             wantedUser.setAccountPassword(resultSet.getString("password"));
+            wantedUser.setAccountAge(resultSet.getInt("age"));
+            wantedUser.setAccountBio(resultSet.getString("bio"));
+            wantedUser.setAccountPhoto(resultSet.getString("photo"));
             return wantedUser;
         } catch (SQLException e) {
             System.out.println("Error in searchUserInDbById(StoreDAO)");
@@ -116,20 +110,30 @@ public class StoreDAO {
     public Product createProductById(int productId){
         try {
             PreparedStatement preparedstatement = connection.prepareStatement(
-                    "SELECT * FROM internetshop.product WHERE id=?"
+                    "SELECT * FROM internetshop.product\n" +
+                            "INNER JOIN countries ON product.country_id=countries.country_id\n" +
+                            "INNER JOIN cities ON product.city_id=cities.city_id \n" +
+                            "INNER JOIN users ON product.author_id=users.id\n" +
+                            "INNER JOIN colors ON product.color_id=colors.color_id\n" +
+                            "INNER JOIN firms ON product.firm_id=firms.firm_id\n" +
+                            "INNER JOIN `types` ON product.type_id=`types`.type_id\n" +
+                            "WHERE product.id=?;"
             );
             preparedstatement.setInt(1, productId);
             ResultSet resultSet = preparedstatement.executeQuery();
             resultSet.next();
-            Product product = new Product(
-                    resultSet.getInt("id"),
-                    resultSet.getString("name"),
-                    resultSet.getString("description"),
-                    resultSet.getDouble("price"),
-                    resultSet.getInt("quantity"),
-                    resultSet.getString("photo"),
-                    resultSet.getInt("author")
-            );
+            Product product = new Product();
+            product.setId(resultSet.getInt("id"));
+            product.setName(resultSet.getString("name"));
+            product.setDescription(resultSet.getString("description"));
+            product.setPrice(resultSet.getDouble("price"));
+            product.setCountry_id(resultSet.getString("country"));
+            product.setCity_id(resultSet.getString("city"));
+            product.setPhoto(resultSet.getString("photo"));
+            product.setAuthor_id(resultSet.getString("username"));
+            product.setColor_id(resultSet.getString("color"));
+            product.setFirm_id(resultSet.getString("firm"));
+            product.setType_id(resultSet.getString("type"));
             return product;
         } catch (SQLException e) {
             System.out.println("Error in createProductById(StoreDAO)");

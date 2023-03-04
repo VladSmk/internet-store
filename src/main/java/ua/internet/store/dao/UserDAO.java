@@ -34,7 +34,7 @@ public class UserDAO {
 
         try {
             preparedStatement = connection.prepareStatement(
-                    "INSERT INTO internetshop.users(`id`, `username`, `password`) VALUES (?, ?, ?);"
+                    "INSERT INTO internetshop.users(`id`, `username`, `password`, `bio`, `age`, `photo`) VALUES (?, ?, ?, ?, ?, ?);"
             );
             statement = connection.createStatement();
             resultSet = statement.executeQuery("SELECT MAX(id) FROM internetshop.users");
@@ -45,6 +45,9 @@ public class UserDAO {
             preparedStatement.setInt(1, maxId);
             preparedStatement.setString(2, user.getAccountName());
             preparedStatement.setString(3, user.getAccountPassword());
+            preparedStatement.setString(4, user.getAccountBio());
+            preparedStatement.setInt(5, user.getAccountAge());
+            preparedStatement.setString(6, user.getAccountPhoto());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {

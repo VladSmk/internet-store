@@ -14,14 +14,29 @@
     <h1>Sign Up</h1>
     <br>
     <br>
-    <label for="aN">Enter account name: </label>
-    <input type="text" th:field="*{accountName}" id="aN">
+    <label for="aName">Enter account name: </label>
+    <input type="text" th:field="*{accountName}" id="aName">
     <div style="color:red" th:if="${#fields.hasErrors('accountName')}" th:errors="*{accountName}">Name error</div>
     <br>
     <br>
-    <label for="aP">Enter account password: </label>
-    <input type="password" th:field="*{accountPassword}" id="aP">
+    <label for="aPassword">Enter account password: </label>
+    <input type="password" th:field="*{accountPassword}" id="aPassword">
     <div style="color:red" th:if="${#fields.hasErrors('accountPassword')}" th:errors="*{accountPassword}">Password error</div>
+    <br>
+    <br>
+    <label for="aBio">Enter account bio: </label>
+    <input type="text" th:field="*{accountBio}" id="aBio">
+    <div style="color:red" th:if="${#fields.hasErrors('accountBio')}" th:errors="*{accountBio}">Bio error</div>
+    <br>
+    <br>
+    <label for="aAge">Enter account age: </label>
+    <input type="text" th:field="*{accountAge}" id="aAge">
+    <div style="color:red" th:if="${#fields.hasErrors('accountAge')}" th:errors="*{accountAge}">Age error</div>
+    <br>
+    <br>
+    <label for="aPhoto">Enter account photo: </label>
+    <input type="text" th:field="*{accountPhoto}" id="aPhoto">
+    <div style="color:red" th:if="${#fields.hasErrors('accountPhoto')}" th:errors="*{accountPhoto}">Photo error</div>
     <br>
     <br>
     <input type="submit" value="Sign up!">

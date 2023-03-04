@@ -32,6 +32,10 @@
             margin-left: 370px;
         }
 
+        .buttons{
+            padding-top: 30px;
+        }
+
 
     </style>
 </head>
@@ -62,17 +66,29 @@
     <div class="in-one-line">
         <div>
             <div th:each="pitem : ${firstColumn}">
-                <h2 th:text=" ${pitem.getName() + ', ' + pitem.getPrice() + '$ '}" >text</h2>
+                <form class="button-padding" th:action="@{/store/lookItem/{itemId}(itemId=${pitem.getId()})}">
+                    <div class="buttons">
+                        <input type="submit" th:value=" ${pitem.getName() + ', ' + pitem.getPrice() + '$ '}">
+                    </div>
+                </form>
             </div>
         </div>
         <div class="padding-left-200">
             <div th:each="pitem : ${secondColumn}">
-                <h2 th:text=" ${pitem.getName() + ', ' + pitem.getPrice() + '$ '}" >text</h2>
+                <form class="button-padding" th:action="@{/store/lookItem/{itemId}(itemId=${pitem.getId()})}">
+                    <div class="buttons">
+                        <input type="submit" th:value=" ${pitem.getName() + ', ' + pitem.getPrice() + '$ '}">
+                    </div>
+                </form>
             </div>
         </div>
         <div class="padding-left-200">
             <div th:each="pitem : ${thirdColumn}">
-                <h2 th:text=" ${pitem.getName() + ', ' + pitem.getPrice() + '$ '}" >text</h2>
+                <form class="button-padding" th:action="@{/store/lookItem/{itemId}(itemId=${pitem.getId()})}">
+                    <div class="buttons">
+                        <input type="submit" th:value=" ${pitem.getName() + ', ' + pitem.getPrice() + '$ '}">
+                    </div>
+                </form>
             </div>
         </div>
     </div>
