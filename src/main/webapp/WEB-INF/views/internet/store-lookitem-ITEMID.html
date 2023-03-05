@@ -4,12 +4,27 @@
     <meta charset="UTF-8">
     <title>Item</title>
     <style>
-        body {background-color: lightblue;}
-        .location-center{text-align: center}
-        .text-size-20{font-size: 20px}
+        body {
+            background-color: lightblue;
+        }
+        .location-center{
+            text-align: center
+        }
+        .text-size-20{
+            font-size: 20px
+        }
         .text-size-30{
             font-size: 30px;
             font-weight: bold;
+        }
+        .buttons-buy-and-basket{
+            display: flex;
+            flex-direction: row;
+            margin-left: 700px;
+            padding-right: 20px;
+        }
+        .padding-left-20{
+            padding-left: 20px;
         }
     </style>
 </head>
@@ -47,6 +62,18 @@
         <br>
         <br>
         Product firm: <a th:text="${objProduct.getFirm_id()}"></a>
+
+        <br>
+        <br>
+
+        <div class="buttons-buy-and-basket">
+            <form th:action="@{/user/registration}">
+                <input type="submit" th:value="Buy">
+            </form>
+            <form class="padding-left-20" th:action="@{/user/registration}">
+                <input type="submit" th:value="Add to basket">
+            </form>
+        </div>
 
     </div>
 </div>

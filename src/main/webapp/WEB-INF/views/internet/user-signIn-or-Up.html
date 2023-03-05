@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  <style>
+      body {background-color: lightblue;}
+    .in-one-line{
+      display: flex;
+      flex-direction: row;
+      padding-left: 670px;
+    }
+    .text-align-center{
+        text-align: center;
+    }
+    .padding-left-20{
+        padding-left: 20px;
+    }
+  </style>
+</head>
+<body>
+<div class="text-align-center">
+    <h1>Registration</h1>
+
+    <div class="in-one-line">
+        <div class="padding-left-20">
+            <form th:action="@{/user/signIn}">
+                <input type="submit" value="Sign In">
+            </form>
+        </div>
+        <div class="padding-left-20">
+            <form th:action="@{/user/signUp}">
+                <input type="submit" value="Sign Up">
+            </form>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

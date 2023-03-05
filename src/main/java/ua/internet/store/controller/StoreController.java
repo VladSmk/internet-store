@@ -29,6 +29,7 @@ public class StoreController {
     public String storePageForSomeUser(@PathVariable("userId") int userId, Model model){
         model.addAttribute("wantedUser", storeDAO.searchUserInDbById(userId));
         model.addAttribute("allProductsList", storeDAO.findAllProduct());
+        model.addAttribute("idUser", userId);
         model.addAttribute("firstColumn", storeDAO.arrayOfThreeList()[0]);
         model.addAttribute("secondColumn", storeDAO.arrayOfThreeList()[1]);
         model.addAttribute("thirdColumn", storeDAO.arrayOfThreeList()[2]);
@@ -40,6 +41,16 @@ public class StoreController {
     public String storeLookItem(@PathVariable("itemId") int itemId, Model model){
         model.addAttribute("objProduct", storeDAO.createProductById(itemId));
         return "internet/store-lookitem-ITEMID";
+    }
+
+    @GetMapping("/{userId}/lookItem/{itemId}")
+    public String storeUserLookItem(@PathVariable("itemId") int itemId,
+                                    @PathVariable("userId") int userid,
+                                    Model model){
+        model.addAttribute("objProduct", storeDAO.createProductById(itemId));
+        model.addAttribute("objInBasket", storeDAO.checkProductInBasket(userid, itemId));
+        model.addAttribute("idUser", userid);
+        return "internet/store-USERID-lookItem-ITEMID";
     }
 
     @GetMapping("/createItem")

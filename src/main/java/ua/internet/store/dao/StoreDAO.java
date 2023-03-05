@@ -141,4 +141,22 @@ public class StoreDAO {
         }
     }
 
+    public boolean checkProductInBasket(int userId, int itemId){
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM internetshop.basket WHERE user_id=? and product_id=?;"
+            );
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, itemId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            System.out.println("Error in checkProductInBasket(StoreDAO)");
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+
 }

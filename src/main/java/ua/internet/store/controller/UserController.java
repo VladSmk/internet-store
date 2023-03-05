@@ -71,6 +71,25 @@ public class UserController {
         return "internet/user-chu-USERID";
     }
 
+    @GetMapping("/registration")
+    public String userRegistration(){
+        return "internet/user-signIn-or-Up";
+    }
+
+    @PostMapping("/postItemInBasket/{userId}/{itemId}")
+    public String postItemInBasket(@PathVariable("userId") int userId,
+                                   @PathVariable("itemId") int itemId){
+        userDAO.addProductToBasket(userId, itemId);
+        return "redirect:/store/"+userId+"/lookItem/"+itemId;
+    }
+
+    @DeleteMapping("/deleteItemInBasket/{userId}/{itemId}")
+    public String deleteItemInBasket(@PathVariable("userId") int userId,
+                                   @PathVariable("itemId") int itemId){
+        userDAO.deleteProductFromBasket(userId, itemId);
+        return "redirect:/store/"+userId+"/lookItem/"+itemId;
+    }
+
 
 
 

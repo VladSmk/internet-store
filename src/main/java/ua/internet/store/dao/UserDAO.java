@@ -91,4 +91,33 @@ public class UserDAO {
         return 0;
     }
 
+    public void addProductToBasket(int userId, int itemId){
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "INSERT INTO internetshop.basket(user_id, product_id) VALUES (?, ?);"
+            );
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, itemId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error in addProductToBasket(UserDAO)");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteProductFromBasket(int userId, int itemId){
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "DELETE FROM internetshop.basket WHERE user_id=? and product_id=?;"
+            );
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, itemId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error in deleteProductFromBasket(UserDAO)");
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

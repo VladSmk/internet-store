@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Item</title>
+  <style>
+    body {
+      background-color: lightblue;
+    }
+    .location-center{
+      text-align: center
+    }
+    .text-size-20{
+      font-size: 20px
+    }
+    .text-size-30{
+      font-size: 30px;
+      font-weight: bold;
+    }
+    .buttons-buy-and-basket{
+      display: flex;
+      flex-direction: row;
+      margin-left: 700px;
+      padding-right: 20px;
+    }
+    .padding-left-20{
+      padding-left: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="location-center">
+  <div class="text-size-30">
+    You are viewing: <a th:text="${objProduct.getName()}"></a>
+  </div>
+  <div class="text-size-20">
+    <br>
+    <br>
+    Product description: <a th:text="${objProduct.getDescription()}"></a>
+    <br>
+    <br>
+    Product price: <a th:text="${objProduct.getPrice()}"></a>
+    <br>
+    <br>
+    Product author: <a th:text="${objProduct.getAuthor_id()}"></a>
+    <br>
+    <br>
+    Product country: <a th:text="${objProduct.getCountry_id()}"></a>
+    <br>
+    <br>
+    Product city: <a th:text="${objProduct.getCity_id()}"></a>
+    <br>
+    <br>
+    Product photo: <a th:text="${objProduct.getPhoto()}"></a>
+    <br>
+    <br>
+    Product color: <a th:text="${objProduct.getColor_id()}"></a>
+    <br>
+    <br>
+    Product type: <a th:text="${objProduct.getType_id()}"></a>
+    <br>
+    <br>
+    Product firm: <a th:text="${objProduct.getFirm_id()}"></a>
+
+    <br>
+    <br>
+
+    <div class="buttons-buy-and-basket">
+      <form>
+        <input type="submit" th:value="Buy">
+      </form>
+      <form class="padding-left-20" th:if="${objInBasket==false}" th:method="POST"
+            th:action="@{/user/postItemInBasket/{userId}/{itemId}(itemId=${objProduct.getId()}, userId=${idUser})}">
+        <input type="submit" th:value="Add">
+      </form>
+      <form class="padding-left-20" th:if="${objInBasket==true}" th:method="DELETE"
+            th:action="@{/user/deleteItemInBasket/{userId}/{itemId}(itemId=${objProduct.getId()}, userId=${idUser})}">
+        <input type="submit" th:value="Delete">
+      </form>
+    </div>
+
+  </div>
+</div>
+
+
+</body>
+</html>

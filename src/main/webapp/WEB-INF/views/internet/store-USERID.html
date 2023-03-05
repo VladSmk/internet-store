@@ -66,7 +66,7 @@
     <div class="in-one-line">
         <div>
             <div th:each="pitem : ${firstColumn}">
-                <form class="button-padding" th:action="@{/store/lookItem/{itemId}(itemId=${pitem.getId()})}">
+                <form class="button-padding" th:action="@{/store/{uId}/lookItem/{itemId}(itemId=${pitem.getId()}, uId=${userId})}">
                     <div class="buttons">
                         <input type="submit" th:value=" ${pitem.getName() + ', ' + pitem.getPrice() + '$ '}">
                     </div>
@@ -75,7 +75,7 @@
         </div>
         <div class="padding-left-200">
             <div th:each="pitem : ${secondColumn}">
-                <form class="button-padding" th:action="@{/store/lookItem/{itemId}(itemId=${pitem.getId()})}">
+                <form class="button-padding" th:action="@{/store/{uId}/lookItem/{itemId}(itemId=${pitem.getId()}, uId=${userId})}">
                     <div class="buttons">
                         <input type="submit" th:value=" ${pitem.getName() + ', ' + pitem.getPrice() + '$ '}">
                     </div>
@@ -84,7 +84,7 @@
         </div>
         <div class="padding-left-200">
             <div th:each="pitem : ${thirdColumn}">
-                <form class="button-padding" th:action="@{/store/lookItem/{itemId}(itemId=${pitem.getId()})}">
+                <form class="button-padding" th:action="@{/store/{uId}/lookItem/{itemId}(itemId=${pitem.getId()}, uId=${userId})}">
                     <div class="buttons">
                         <input type="submit" th:value=" ${pitem.getName() + ', ' + pitem.getPrice() + '$ '}">
                     </div>
