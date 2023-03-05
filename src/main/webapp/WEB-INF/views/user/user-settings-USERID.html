@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../static/user-settings.css">
+    <title>Settings</title>
+    <style>
+        body {
+            background-color: lightblue;
+        }
+        .location-center{
+            text-align: center
+        }
+        .text-size-20{
+            font-size: 20px
+        }
+        .text-size-30{
+            font-size: 30px;
+            font-weight: bold;
+        }
+        .buttons-chu-and-chp{
+            display: flex;
+            flex-direction: row;
+            margin-left: 665px;
+            padding-right: 20px;
+        }
+        .padding-left-20{
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+
+<div class="location-center">
+    <div class="text-size-30">
+        User setting: <a th:text="${chosenUser.getAccountName()}">text</a>
+    </div>
+    <div class="text-size-20">
+        <br>
+        <br>
+        User name: <a th:text="${chosenUser.getAccountName()}"></a>
+        <br>
+        <br>
+        User age: <a th:text="${chosenUser.getAccountAge()}"></a>
+        <br>
+        <br>
+        User bio: <a th:text="${chosenUser.getAccountBio()}"></a>
+        <br>
+        <br>
+        User photo: <a th:text="${chosenUser.getAccountPhoto()}"></a>
+        <br>
+        <br>
+    </div>
+    <br>
+    <br>
+    <div class="buttons-chu-and-chp">
+        <form th:action="@{/user/chu/{userId}(userId=${chosenUser.getAccountId()})}">
+            <input type="submit" th:value="changeBio">
+        </form>
+        <form class="padding-left-20" th:action="@{/user/chp/{userId}(userId=${chosenUser.getAccountId()})}">
+            <input type="submit" th:value="changePassword">
+        </form>
+    </div>
+    <br>
+    <form th:action="@{/user/deleteAccount/{userId}(userId=${chosenUser.getAccountId()})}">
+        <input type="submit" th:value="deleteAccount">
+    </form>
+    <br>
+    <br>
+
+</div>
+
+
+</body>
+</html>

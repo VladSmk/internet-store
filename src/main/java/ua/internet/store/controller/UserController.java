@@ -24,7 +24,7 @@ public class UserController {
     @GetMapping("/signIn")
     public String UserSignIn(Model model){
         model.addAttribute("testingUser", new User());
-        return "internet/user-sign-in";
+        return "user/user-sign-in";
     }
 
     @GetMapping("/postUserSignIn")
@@ -41,13 +41,13 @@ public class UserController {
     @GetMapping("/signUp")
     public String UserSignUp(Model model){
         model.addAttribute("newUser", new User());
-        return "internet/user-sign-up";
+        return "user/user-sign-up";
     }
 
     @PostMapping("/postUserSignUp")
     public String postUserSignUp(@ModelAttribute("newUser") @Valid User user, BindingResult bindingResult){
         if (bindingResult.hasErrors())
-            return "internet/user-sign-up";
+            return "user/user-sign-up";
 
         userDAO.signUpNewAccountInDb(user);
         return "redirect:/store";
@@ -55,25 +55,13 @@ public class UserController {
 
     @GetMapping("/settings/{userId}")
     public String settingsPageForSomeUser(@PathVariable("userId") int userId, Model model){
-        model.addAttribute("userId", userId);
-        return "internet/user-settings-USERID";
-    }
-
-    @GetMapping("/chp/{userId}")
-    public String userSettingChangePassword(@PathVariable("userId") int userId, Model model){
-        model.addAttribute("userId", userId);
-        return "internet/user-chp-USERID";
-    }
-
-    @GetMapping("/chu/{userId}")
-    public String userSettingChangeUsername(@PathVariable("userId") int userId, Model model){
-        model.addAttribute("userId", userId);
-        return "internet/user-chu-USERID";
+        model.addAttribute("chosenUser", userDAO.searchAccountById(userId));
+        return "user/user-settings-USERID";
     }
 
     @GetMapping("/registration")
     public String userRegistration(){
-        return "internet/user-signIn-or-Up";
+        return "user/user-signIn-or-Up";
     }
 
     @PostMapping("/postItemInBasket/{userId}/{itemId}")
@@ -91,7 +79,48 @@ public class UserController {
     }
 
 
+    @DeleteMapping("/deleteAccount/{userId}/")
+    public String deleteItemInBasket(@ModelAttribute("newUser") User user,
+                                     @PathVariable("userId") int userId){
+        if(userDAO.searchPasswordById(userId).equals(user.getAccountPassword())){
+            userDAO.deleteAccountFromDb(userId);
+            return "redirect:/store";
+        }
+        return "redirect:/user/settings/"+userId;
+    }
 
+    @GetMapping("/deleteAccount/{userId}")
+    public String deleteAccount(@PathVariable("userId") int userId, Model model){
+        model.addAttribute("user", userDAO.searchAccountById(userId));
+        model.addAttribute("chosenUser", userDAO.searchAccountById(userId));
+        return "user/user-deleteAccount-USERID";
+    }
+
+    @DeleteMapping("/deleteAccount/{userId}")
+    public String finalDeleteAccount(@ModelAttribute("user") User user,
+                                     @PathVariable("userId") int userId){
+        if (user.getAccountPassword().equals(userDAO.searchPasswordById(userId)))
+            return "redirect:/store";
+        else
+            return "redirect:/user/deleteAccount"+userId;
+    }
+
+
+
+
+
+
+    @GetMapping("/chp/{userId}")
+    public String userSettingChangePassword(@PathVariable("userId") int userId, Model model){
+        model.addAttribute("userId", userId);
+        return "user/user-chp-USERID";
+    }
+
+    @GetMapping("/chu/{userId}")
+    public String userSettingChangeUser(@PathVariable("userId") int userId, Model model){
+        model.addAttribute("userId", userId);
+        return "user/user-chu-USERID";
+    }
 
 
 }

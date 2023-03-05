@@ -2,6 +2,8 @@ package ua.internet.store.dao;
 
 import org.springframework.stereotype.Component;
 import ua.internet.store.model.User;
+
+import javax.swing.plaf.UIResource;
 import java.sql.*;
 
 @Component
@@ -28,16 +30,13 @@ public class UserDAO {
     }
 
     public void signUpNewAccountInDb(User user){
-        PreparedStatement preparedStatement = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
 
         try {
-            preparedStatement = connection.prepareStatement(
+            PreparedStatement preparedStatement = connection.prepareStatement(
                     "INSERT INTO internetshop.users(`id`, `username`, `password`, `bio`, `age`, `photo`) VALUES (?, ?, ?, ?, ?, ?);"
             );
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT MAX(id) FROM internetshop.users");
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT MAX(id) FROM internetshop.users");
 
             resultSet.next();
             int maxId = resultSet.getInt("MAX(id)") + 1;
@@ -56,9 +55,8 @@ public class UserDAO {
         }
     }
     public boolean signInAccountWithDb(User user) {
-        PreparedStatement preparedStatement = null;
         try {
-            preparedStatement = connection.prepareStatement(
+            PreparedStatement preparedStatement = connection.prepareStatement(
                     "SELECT * FROM internetshop.users WHERE username=? and password=?;"
             );
             preparedStatement.setString(1, user.getAccountName());
@@ -75,14 +73,12 @@ public class UserDAO {
     }
 
     public int searchIdByName(User user){
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
         try {
-            preparedStatement = connection.prepareStatement(
+            PreparedStatement preparedStatement = connection.prepareStatement(
                     "SELECT id FROM internetshop.users WHERE username=?;"
             );
             preparedStatement.setString(1, user.getAccountName());
-            resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             return resultSet.getInt("id");
         } catch (SQLException e) {
@@ -115,6 +111,60 @@ public class UserDAO {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error in deleteProductFromBasket(UserDAO)");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public User searchAccountById(int userId){
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM internetshop.users WHERE id=?;"
+            );
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()) {
+                return new User(
+                        resultSet.getInt("id"),
+                        resultSet.getString("username"),
+                        resultSet.getString("password"),
+                        resultSet.getInt("age"),
+                        resultSet.getString("photo"),
+                        resultSet.getString("bio")
+                );
+            }
+            else
+                return null;
+        } catch (SQLException e) {
+            System.out.println("Error in searchAccountById(UserDAO)");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteAccountFromDb(int userId){
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "DELETE FROM internetshop.users WHERE id=?;"
+            );
+            preparedStatement.setInt(1, userId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error in deleteAccountFromDb(UserDAO)");
+            throw new RuntimeException(e);
+        }
+    }
+    public String searchPasswordById(int userId){
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT password FROM internetshop.users WHERE id=?"
+            );
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next())
+                return resultSet.getString("password");
+            else
+                return null;
+        } catch (SQLException e) {
+            System.out.println("Error in searchPasswordById(userDAO)");
             throw new RuntimeException(e);
         }
     }

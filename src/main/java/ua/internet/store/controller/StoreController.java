@@ -22,7 +22,7 @@ public class StoreController {
         model.addAttribute("firstColumn", storeDAO.arrayOfThreeList()[0]);
         model.addAttribute("secondColumn", storeDAO.arrayOfThreeList()[1]);
         model.addAttribute("thirdColumn", storeDAO.arrayOfThreeList()[2]);
-        return "internet/store";
+        return "store/store";
     }
 
     @GetMapping("/{userId}")
@@ -33,14 +33,14 @@ public class StoreController {
         model.addAttribute("firstColumn", storeDAO.arrayOfThreeList()[0]);
         model.addAttribute("secondColumn", storeDAO.arrayOfThreeList()[1]);
         model.addAttribute("thirdColumn", storeDAO.arrayOfThreeList()[2]);
-        return "internet/store-USERID";
+        return "store/store-USERID";
     }
 
 
     @GetMapping("/lookItem/{itemId}")
     public String storeLookItem(@PathVariable("itemId") int itemId, Model model){
         model.addAttribute("objProduct", storeDAO.createProductById(itemId));
-        return "internet/store-lookitem-ITEMID";
+        return "store/store-lookitem-ITEMID";
     }
 
     @GetMapping("/{userId}/lookItem/{itemId}")
@@ -50,24 +50,24 @@ public class StoreController {
         model.addAttribute("objProduct", storeDAO.createProductById(itemId));
         model.addAttribute("objInBasket", storeDAO.checkProductInBasket(userid, itemId));
         model.addAttribute("idUser", userid);
-        return "internet/store-USERID-lookItem-ITEMID";
+        return "store/store-USERID-lookItem-ITEMID";
     }
 
     @GetMapping("/createItem")
     public String storeCreateItem(Model model){
-        return "internet/store-createitem-USERID";
+        return "store/store-createitem-USERID";
     }
 
     @GetMapping("/myItem/{userId}")
     public String PageWithUserItemsForSale(@PathVariable("userId") int userId, Model model){
 //        model.addAttribute("userId", userId);
-        return "internet/store-myitem-USERID";
+        return "store/store-myitem-USERID";
     }
 
     @GetMapping("/chi/{itemId}")
     public String changeItemsForSaleByItemId(@PathVariable("itemId") int userId, Model model){
 //        model.addAttribute("userId", userId);
-        return "internet/store-chi-ITEMID";
+        return "store/store-chi-ITEMID";
     }
 
 

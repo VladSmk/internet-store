@@ -18,6 +18,15 @@ public class User {
     @NotEmpty(message = "not empty")
     private String accountBio;
 
+    public User(){}
+    public User(int accountId, String accountName, String accountPassword, int accountAge, String accountPhoto, String accountBio) {
+        this.accountId = accountId;
+        this.accountName = accountName;
+        this.accountPassword = accountPassword;
+        this.accountAge = accountAge;
+        this.accountPhoto = accountPhoto;
+        this.accountBio = accountBio;
+    }
 
     public int getAccountId() {
         return accountId;

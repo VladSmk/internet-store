@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.internet.store.dao.BasketDAO;
-import ua.internet.store.model.Product;
 
 @Controller
 @RequestMapping("/basket")
@@ -21,13 +20,14 @@ public class BasketController {
 
     @GetMapping("/lookItem/{userId}/{itemId}")
     public String lookSomeItemForSomeUser(@PathVariable("userId") int useId, @PathVariable("itemId") int itemId, Model model){
-        return "internet/basket-lookitem-USERID-ITEMID";
+        return "basket/basket-lookitem-USERID-ITEMID";
     }
 
     @GetMapping("/{userId}")
     public String lookSomeUserBasket(@PathVariable("userId") int userId, Model model){
         model.addAttribute("productList", basketDAO.searchAllUserItemInBasket(userId));
-        return "internet/basket-USERID";
+        model.addAttribute("idUser", userId);
+        return "basket/basket-USERID";
     }
 
 
