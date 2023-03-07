@@ -37,7 +37,7 @@ public class UserDAO {
                     "INSERT INTO internetshop.users(`id`, `username`, `password`, `bio`, `age`, `photo`) VALUES (?, ?, ?, ?, ?, ?);"
             );
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT MAX(id) FROM internetshop.users");
+            ResultSet resultSet = statement.executeQuery("SELECT MAX(id) FROM internetshop.users;");
 
             resultSet.next();
             int maxId = resultSet.getInt("MAX(id)") + 1;
@@ -156,7 +156,7 @@ public class UserDAO {
     public String searchPasswordById(int userId){
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
-                    "SELECT password FROM internetshop.users WHERE id=?"
+                    "SELECT password FROM internetshop.users WHERE id=?;"
             );
             preparedStatement.setInt(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -197,6 +197,24 @@ public class UserDAO {
             System.out.println("Error in passwordVerification(UserDAO)");
             throw new RuntimeException(e);
         }
+    }
+
+    public void updateUserInDb(User user){
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "UPDATE internetshop.users SET `username`=?, `bio`=?, `age`=?, `photo`=? WHERE id=?;"
+            );
+            preparedStatement.setString(1, user.getAccountName());
+            preparedStatement.setString(2, user.getAccountBio());
+            preparedStatement.setInt(3, user.getAccountAge());
+            preparedStatement.setString(4, user.getAccountPhoto());
+            preparedStatement.setInt(5, user.getAccountId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error in updateUserInDb(UserDAo)");
+            throw new RuntimeException(e);
+        }
+
     }
 
 

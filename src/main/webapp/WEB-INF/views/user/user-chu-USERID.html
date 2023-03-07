@@ -2,11 +2,50 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Username</title>
+    <title>User</title>
+    <style>
+        body{
+            background-color: lightblue
+        }
+        .location-center{
+            text-align: center;
+        }
+        .color-red{
+            color: red;
+        }
+    </style>
 </head>
 <body>
+<div class="location-center">
+    <h1>Change User Bio</h1>
 
-<h1>Change User</h1>
+    <form th:method="PATCH" th:action="@{/user/changeUser/{userId}(userId=${userId})}" th:object="${newUser}">
+        <br>
+        <br>
+        <label for="aName">Enter name: </label>
+        <input type="text" th:field="*{accountName}" id="aName">
+        <div style="color:red" th:if="${#fields.hasErrors('accountName')}" th:errors="*{accountName}">Name error</div>
+        <br>
+        <br>
+        <label for="aAge">Enter age: </label>
+        <input type="text" th:field="*{accountAge}" id="aAge">
+        <div style="color:red" th:if="${#fields.hasErrors('accountAge')}" th:errors="*{accountAge}">Age error</div>
+        <br>
+        <br>
+        <label for="aBio">Enter bio: </label>
+        <input type="text" th:field="*{accountBio}" id="aBio">
+        <div style="color:red" th:if="${#fields.hasErrors('accountBio')}" th:errors="*{accountBio}">Bio error</div>
+        <br>
+        <br>
+        <label for="aPhoto">Enter photo: </label>
+        <input type="text" th:field="*{accountPhoto}" id="aPhoto">
+        <div style="color:red" th:if="${#fields.hasErrors('accountPhoto')}" th:errors="*{accountPhoto}">Photo error</div>
+        <br>
+        <br>
+        <input type="submit" value="Save!">
+    </form>
 
+
+</div>
 </body>
 </html>

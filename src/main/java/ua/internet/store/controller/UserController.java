@@ -45,13 +45,14 @@ public class UserController {
         return "user/user-sign-up";
     }
 
-    @PostMapping("/postUserSignUp")
-    public String postUserSignUp(@ModelAttribute("newUser") @Valid User user, BindingResult bindingResult){
+    @PostMapping("/postUserSignUp/{userId}")
+    public String postUserSignUp(@PathVariable("userId") int userId,
+                                 @ModelAttribute("newUser") @Valid User user, BindingResult bindingResult){
         if (bindingResult.hasErrors())
             return "user/user-sign-up";
 
         userDAO.signUpNewAccountInDb(user);
-        return "redirect:/store";
+        return "redirect:/store/"+userId;
     }
 
     @GetMapping("/settings/{userId}")
@@ -117,7 +118,7 @@ public class UserController {
     }
     @PatchMapping("/changePassword/{userId}")
     public String postUserSettingChangePassword(@PathVariable("userId") int userId,
-                                                @ModelAttribute("newPassword") @Valid UserPassword userPassword, Model model){
+                                                @ModelAttribute("newPassword") @Valid UserPassword userPassword){
         if (userDAO.passwordVerification(userPassword) && userPassword.getNewPassword1().equals(userPassword.getNewPassword2())) {
             userDAO.setNewPassword(userPassword);
             return "redirect:/user/settings/"+userId;
@@ -129,9 +130,20 @@ public class UserController {
 
 
     @GetMapping("/chu/{userId}")
-    public String userSettingChangeUser(@PathVariable("userId") int userId, Model model){
-        model.addAttribute("userId", userId);
+    public String postSettingChangeUser(@PathVariable("userId") int userId, Model model){
+        model.addAttribute("newUser", userDAO.searchAccountById(userId));
         return "user/user-chu-USERID";
+    }
+
+    @PatchMapping("/changeUser/{userId}")
+    public String postUserSettingChangeUser(@PathVariable("userId") int userId,
+                                            @ModelAttribute("newUser") User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors())
+            return "user/user-chu-USERID";
+
+        user.setAccountId(userId);
+        userDAO.updateUserInDb(user);
+        return "redirect:/user/settings/"+userId;
     }
 
 

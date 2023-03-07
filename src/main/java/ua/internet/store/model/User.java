@@ -28,6 +28,10 @@ public class User {
         this.accountBio = accountBio;
     }
 
+    public User(int accountId) {
+        this.accountId = accountId;
+    }
+
     public int getAccountId() {
         return accountId;
     }
