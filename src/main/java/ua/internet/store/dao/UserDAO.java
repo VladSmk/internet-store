@@ -2,6 +2,7 @@ package ua.internet.store.dao;
 
 import org.springframework.stereotype.Component;
 import ua.internet.store.model.User;
+import ua.internet.store.model.UserPassword;
 
 import javax.swing.plaf.UIResource;
 import java.sql.*;
@@ -165,6 +166,35 @@ public class UserDAO {
                 return null;
         } catch (SQLException e) {
             System.out.println("Error in searchPasswordById(userDAO)");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setNewPassword(UserPassword userPassword){
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "UPDATE internetshop.users SET password=? WHERE id=?;"
+            );
+            preparedStatement.setString(1, userPassword.getNewPassword1());
+            preparedStatement.setInt(2, userPassword.getUserId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error in changePassword(UserDAO)");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean passwordVerification(UserPassword userPassword){
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM internetshop.users WHERE id=? and `password`=?;"
+            );
+            preparedStatement.setInt(1, userPassword.getUserId());
+            preparedStatement.setString(2, userPassword.getOldPassword());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            System.out.println("Error in passwordVerification(UserDAO)");
             throw new RuntimeException(e);
         }
     }

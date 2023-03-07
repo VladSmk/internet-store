@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.internet.store.dao.UserDAO;
 import ua.internet.store.model.User;
+import ua.internet.store.model.UserPassword;
 
 import javax.validation.Valid;
 
@@ -107,14 +108,25 @@ public class UserController {
 
 
 
-
-
-
+    private boolean PasswordIs = true;
     @GetMapping("/chp/{userId}")
     public String userSettingChangePassword(@PathVariable("userId") int userId, Model model){
-        model.addAttribute("userId", userId);
+        model.addAttribute("newPassword", new UserPassword(userId));
+        model.addAttribute("oldPasswordIs", PasswordIs);
         return "user/user-chp-USERID";
     }
+    @PatchMapping("/changePassword/{userId}")
+    public String postUserSettingChangePassword(@PathVariable("userId") int userId,
+                                                @ModelAttribute("newPassword") @Valid UserPassword userPassword, Model model){
+        if (userDAO.passwordVerification(userPassword) && userPassword.getNewPassword1().equals(userPassword.getNewPassword2())) {
+            userDAO.setNewPassword(userPassword);
+            return "redirect:/user/settings/"+userId;
+        } else {
+            PasswordIs=false;
+            return "redirect:/user/chp/"+userId;
+        }
+    }
+
 
     @GetMapping("/chu/{userId}")
     public String userSettingChangeUser(@PathVariable("userId") int userId, Model model){

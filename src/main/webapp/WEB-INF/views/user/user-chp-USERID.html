@@ -3,10 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Password</title>
+    <style>
+        body{
+            background-color: lightblue
+        }
+        .location-center{
+            text-align: center;
+        }
+        .color-red{
+            color: red;
+        }
+    </style>
 </head>
 <body>
+<div class="location-center">
+    <h1>Change Password</h1>
 
-<h1>Change Password</h1>
+    <form th:method="PATCH" th:action="@{/user/changePassword/{userId}(userId=${userId})}" th:object="${newPassword}">
+        <br>
+        <br>
+        <label for="p1">Enter new password: </label>
+        <input type="password" th:field="*{newPassword1}" id="p1">
+        <br>
+        <br>
+        <label for="p2">Enter new password: </label>
+        <input type="password" th:field="*{newPassword2}" id="p2">
+        <br>
+        <br>
+        <label for="oP">Enter old password: </label>
+        <input type="password" th:field="*{oldPassword}" id="oP">
+        <p class="color-red" th:if="${oldPasswordIs==false}">Password isn't correct</p>
+        <br>
+        <br>
+        <input type="submit" value="Save!">
+    </form>
 
+
+</div>
 </body>
 </html>
