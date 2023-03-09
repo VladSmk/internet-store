@@ -2,11 +2,60 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MyItem</title>
+    <title>Create Product</title>
+    <style>
+        body {background-color: lightblue;}
+        .location-center{
+            text-align: center;
+        }
+        .in-one-line{
+            display: flex;
+            flex-direction: row;
+        }
+        .padding-right-20{
+            padding-right: 20px;
+        }
+        .margin-left {
+            margin-left: 600px;
+        }
+    </style>
 </head>
 <body>
+<div class="margin-left">
+    <div>
+        <h1>Your product for sale</h1>
+        <br>
+        <br>
+    </div>
 
-<h1>List With My Item For Sale</h1>
+    <div th:each="item : ${productList}">
+        <div class="in-one-line">
+            <div class="padding-right-20">
+                <form th:action="@{/store/{uId}/lookItem/{itemId}(itemId=${item.getId()}, uId=${userId})}">
+                    <input type="submit" th:value=" ${item.getName() + ', ' + item.getPrice() + '$ '}">
+                </form>
+            </div>
+            <div class="padding-right-20">
+                <form th:method="PATCH" th:action="@{/store/{uId}/changeItem/{itemId}(itemId=${item.getId()}, uId=${userId})}">
+                    <input type="submit" value="Change">
+                </form>
+            </div>
+            <div class="padding-right-20">
+                <form th:method="DELETE" th:action="@{/store/postDeleteItem/{itemId}(itemId=${item.getId()})}">
+                    <input type="submit" value="[x]">
+                </form>
+            </div>
+        </div>
+        <br>
+        <br>
+    </div>
+</div>
+
+<div class="location-center">
+    <form th:action="@{/store/{userId}/createItem(userId=${userId})}">
+        <input type="submit" value="Create new product">
+    </form>
+</div>
 
 </body>
 </html>

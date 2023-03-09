@@ -2,11 +2,56 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Create Product</title>
+    <title>Product</title>
+    <style>
+        body {background-color: lightblue;}
+        .location-center{text-align: center}
+    </style>
 </head>
 <body>
 
-<h1>Create Product</h1>
+<form class="location-center" th:method="POST" th:action="@{/store/postCreateProduct/{userId}(userId=${idUser})}" th:object="${newProduct}" >
+    <h1>Create product</h1>
+    <br>
+    <br>
+    <label for="pName">Enter name: </label>
+    <input type="text" th:field="*{name}" id="pName">
+    <br>
+    <br>
+    <label for="pDescription">Enter description: </label>
+    <input type="text" th:field="*{description}" id="pDescription">
+    <br>
+    <br>
+    <label for="pPrice">Enter price: </label>
+    <input type="text" th:field="*{price}" id="pPrice">
+    <br>
+    <br>
+    <label for="pPhoto">Enter photo: </label>
+    <input type="text" th:field="*{photo}" id="pPhoto">
+    <br>
+    <br>
+    <label for="pCountry">Enter county: </label>
+    <input type="text" th:field="*{country_id}" id="pCountry">
+    <br>
+    <br>
+    <label for="pCity">Enter city: </label>
+    <input type="text" th:field="*{city_id}" id="pCity">
+    <br>
+    <br>
+    <label for="pColor">Enter color: </label>
+    <input type="text" th:field="*{color_id}" id="pColor">
+    <br>
+    <br>
+    <label for="pFirm">Enter firm: </label>
+    <input type="text" th:field="*{firm_id}" id="pFirm">
+    <br>
+    <br>
+    <label for="pType">Enter type: </label>
+    <input type="text" th:field="*{type_id}" id="pType">
+    <br>
+    <br>
+    <input type="submit" value="Create!">
+</form>
 
 </body>
 </html>

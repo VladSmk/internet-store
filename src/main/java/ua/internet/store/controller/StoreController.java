@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.internet.store.dao.StoreDAO;
+import ua.internet.store.model.Product;
 
 @Controller
 @RequestMapping("/store")
@@ -52,23 +53,34 @@ public class StoreController {
         model.addAttribute("idUser", userid);
         return "store/store-USERID-lookItem-ITEMID";
     }
-
-    @GetMapping("/createItem")
-    public String storeCreateItem(Model model){
-        return "store/store-createitem-USERID";
-    }
-
     @GetMapping("/myItem/{userId}")
     public String PageWithUserItemsForSale(@PathVariable("userId") int userId, Model model){
-//        model.addAttribute("userId", userId);
+        model.addAttribute("productList", storeDAO.listProductByAuthorId(userId));
+        model.addAttribute("userId", userId);
         return "store/store-myitem-USERID";
     }
 
+    @GetMapping("/{userId}/createItem")
+    public String storeCreateItem(@PathVariable("userId") int userId, Model model){
+        model.addAttribute("newProduct", new Product(storeDAO.searchUserNameNyId(userId)));
+        model.addAttribute("idUser", userId);
+        return "store/store-createitem-USERID";
+    }
+
+    @PostMapping("/postCreateProduct/{userId}")
+    public String postStoreCreateItem(@PathVariable("userId") int userId,
+                                      @ModelAttribute("newProduct") Product product){
+        storeDAO.saveProductInDb(product);
+        return "redirect:/store/"+userId;
+    }
+
+
     @GetMapping("/chi/{itemId}")
-    public String changeItemsForSaleByItemId(@PathVariable("itemId") int userId, Model model){
-//        model.addAttribute("userId", userId);
+    public String changeItemsForSaleByItemId(@PathVariable("itemId") int userId){
         return "store/store-chi-ITEMID";
     }
+
+
 
 
 }

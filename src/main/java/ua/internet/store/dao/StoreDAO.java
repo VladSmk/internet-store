@@ -1,5 +1,6 @@
 package ua.internet.store.dao;
 
+import com.mysql.cj.jdbc.CallableStatement;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import ua.internet.store.model.Product;
@@ -156,7 +157,160 @@ public class StoreDAO {
         }
     }
 
+    public String searchUserNameNyId(int userId){
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM internetshop.users WHERE id=?;"
+            );
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            return resultSet.getString("username");
+        } catch (SQLException e) {
+            System.out.println("Error in searchUserNameNyId(StoreDAO)");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void saveProductInDb(Product product){
 
 
+        try {
+            PreparedStatement finalPreparedStatement = connection.prepareStatement(
+                    "INSERT INTO internetshop.product\n" +
+                            "       (`id`, `name`, `description`, `price`, `country_id`, `city_id`, `photo`, `author_id`, `color_id`, `firm_id`, `type_id`)\n" +
+                            "VALUES (   ?,      ?,             ?,       ?,            ?,         ?,       ?,           ?,          ?,         ?,         ?);"
+            );
 
+            finalPreparedStatement.setInt(1, returnsMaxIdFromTable(
+                    "product",
+                    "id")
+            );
+            finalPreparedStatement.setString(2, product.getName());
+            finalPreparedStatement.setString(3, product.getDescription());
+            finalPreparedStatement.setDouble(4, product.getPrice());
+            finalPreparedStatement.setString(7, product.getPhoto());
+            finalPreparedStatement.setString(8, product.getAuthor_id());
+
+            finalPreparedStatement.setInt(
+                    5,
+                    returnsTheExistingItemId(
+                            "countries",
+                            "country_id",
+                            "country",
+                            product.getCountry_id()
+                    )
+            );
+
+            finalPreparedStatement.setInt(
+                    6,
+                    returnsTheExistingItemId(
+                            "cities",
+                            "city_id",
+                            "city",
+                            product.getCity_id()
+                    )
+            );
+
+            finalPreparedStatement.setInt(
+                    9,
+                    returnsTheExistingItemId(
+                            "colors",
+                            "color_id",
+                            "color",
+                            product.getColor_id()
+                    )
+            );
+
+            finalPreparedStatement.setInt(
+                    10,
+                    returnsTheExistingItemId(
+                            "firms",
+                            "firm_id",
+                            "firm",
+                            product.getFirm_id()
+                    )
+            );
+
+            finalPreparedStatement.setInt(
+                    10,
+                    returnsTheExistingItemId(
+                            "types",
+                            "type_id",
+                            "type",
+                            product.getType_id()
+                    )
+            );
+        } catch (SQLException e) {
+            System.out.println("Error in saveProductInDb(StoreDAO)");
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
+    private static int returnsTheExistingItemId(String tableName, String stringIdName, String stringName, String value){
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM internetshop."+tableName+";"
+            );
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                if (resultSet.getString(stringName).equals(value))
+                    return resultSet.getInt(stringIdName);
+            }
+            System.out.println("---"+tableName+" "+stringIdName);
+            int newId = returnsMaxIdFromTable(tableName, stringIdName);
+            System.out.println("YES__" + newId);
+            PreparedStatement preparedStatement2 = connection.prepareStatement(
+                    "INSERT INTO internetshop."+tableName+"(`"+stringIdName+"`, `"+stringName+"`) " +
+                            "VALUES ('"+newId+"', '"+value+"');"
+            );
+            System.out.println("111");
+            preparedStatement2.executeUpdate();
+            System.out.println("222");
+            return newId;
+        } catch (SQLException e) {
+            System.out.println("Error in returnsTheExistingItemId(StoreDAO)");
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static int returnsMaxIdFromTable(String tableName, String stringIdName){
+        try {
+            Statement statement = connection.createStatement();
+            System.out.println("1 ");
+            ResultSet resultSet = statement.executeQuery("SELECT MAX("+stringIdName+") FROM internetshop."+tableName+";");
+            System.out.println("2 ");
+            resultSet.next();
+            int id = (resultSet.getInt("MAX(id)")) + 1;
+            System.out.println("id="+id);
+            return id;
+        } catch (SQLException e) {
+            System.out.println("Error in returnsMaxIdFromTable(StoreDAO)");
+        }
+        return 0;
+    }
+
+    public ArrayList<Product> listProductByAuthorId(int authorId){
+        try {
+            ArrayList<Product> arrayList = new ArrayList<Product>();
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM internetshop.product WHERE author_id=?;"
+            );
+            preparedStatement.setInt(1, authorId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                Product product = new Product();
+                product.setId(resultSet.getInt("id"));
+                product.setName(resultSet.getString("name"));
+                product.setPrice(resultSet.getDouble("price"));
+                arrayList.add(product);
+            }
+            return arrayList;
+        } catch (SQLException e) {
+            System.out.println("Error listProductByAuthorId(StoreDAO)");
+        }
+        return null;
+    }
 }

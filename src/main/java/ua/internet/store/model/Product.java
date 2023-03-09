@@ -14,6 +14,9 @@ public class Product {
     private String type_id;
     public Product(){}
 
+    public Product(String author_id) {
+        this.author_id = author_id;
+    }
 
     public int getId() {
         return id;
