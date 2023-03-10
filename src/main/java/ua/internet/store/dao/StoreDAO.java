@@ -1,14 +1,11 @@
 package ua.internet.store.dao;
 
-import com.mysql.cj.jdbc.CallableStatement;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
 import ua.internet.store.model.Product;
 import ua.internet.store.model.User;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class StoreDAO {
@@ -190,7 +187,9 @@ public class StoreDAO {
             finalPreparedStatement.setString(3, product.getDescription());
             finalPreparedStatement.setDouble(4, product.getPrice());
             finalPreparedStatement.setString(7, product.getPhoto());
-            finalPreparedStatement.setString(8, product.getAuthor_id());
+
+//            System.out.println("ID="+Integer.parseInt(product.getAuthor_id()));
+            finalPreparedStatement.setInt(8, Integer.parseInt(product.getAuthor_id()));
 
             finalPreparedStatement.setInt(
                     5,
@@ -233,7 +232,7 @@ public class StoreDAO {
             );
 
             finalPreparedStatement.setInt(
-                    10,
+                    11,
                     returnsTheExistingItemId(
                             "types",
                             "type_id",
@@ -241,6 +240,8 @@ public class StoreDAO {
                             product.getType_id()
                     )
             );
+
+            finalPreparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error in saveProductInDb(StoreDAO)");
             throw new RuntimeException(e);
@@ -259,16 +260,12 @@ public class StoreDAO {
                 if (resultSet.getString(stringName).equals(value))
                     return resultSet.getInt(stringIdName);
             }
-            System.out.println("---"+tableName+" "+stringIdName);
             int newId = returnsMaxIdFromTable(tableName, stringIdName);
-            System.out.println("YES__" + newId);
             PreparedStatement preparedStatement2 = connection.prepareStatement(
                     "INSERT INTO internetshop."+tableName+"(`"+stringIdName+"`, `"+stringName+"`) " +
                             "VALUES ('"+newId+"', '"+value+"');"
             );
-            System.out.println("111");
             preparedStatement2.executeUpdate();
-            System.out.println("222");
             return newId;
         } catch (SQLException e) {
             System.out.println("Error in returnsTheExistingItemId(StoreDAO)");
@@ -278,14 +275,12 @@ public class StoreDAO {
 
     private static int returnsMaxIdFromTable(String tableName, String stringIdName){
         try {
-            Statement statement = connection.createStatement();
-            System.out.println("1 ");
-            ResultSet resultSet = statement.executeQuery("SELECT MAX("+stringIdName+") FROM internetshop."+tableName+";");
-            System.out.println("2 ");
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT MAX("+stringIdName+") FROM internetshop."+tableName+";"
+            );
+            ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
-            int id = (resultSet.getInt("MAX(id)")) + 1;
-            System.out.println("id="+id);
-            return id;
+            return (resultSet.getInt("MAX("+stringIdName+")")) + 1;
         } catch (SQLException e) {
             System.out.println("Error in returnsMaxIdFromTable(StoreDAO)");
         }

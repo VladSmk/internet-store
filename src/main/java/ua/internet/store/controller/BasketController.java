@@ -18,11 +18,6 @@ public class BasketController {
         this.basketDAO = basketDAO;
     }
 
-    @GetMapping("/lookItem/{userId}/{itemId}")
-    public String lookSomeItemForSomeUser(@PathVariable("userId") int useId, @PathVariable("itemId") int itemId, Model model){
-        return "basket/basket-lookitem-USERID-ITEMID";
-    }
-
     @GetMapping("/{userId}")
     public String lookSomeUserBasket(@PathVariable("userId") int userId, Model model){
         model.addAttribute("productList", basketDAO.searchAllUserItemInBasket(userId));

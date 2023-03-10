@@ -2,11 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Item</title>
+    <title>Change Item</title>
+    <style>
+        body{
+            background-color: lightblue
+        }
+        .location-center{
+            text-align: center;
+        }
+        .color-red{
+            color: red;
+        }
+    </style>
 </head>
 <body>
+<div class="location-center">
+    <h1>Change User Bio</h1>
 
-<h1>Change item</h1>
+    <form th:method="PATCH" th:action="@{/user/changeUser/{userId}(userId=${userId})}" th:object="${newUser}">
+        <br>
+        <br>
+        <label for="aName">Enter name: </label>
+        <input type="text" th:field="*{accountName}" id="aName">
+        <br>
+        <br>
+        <label for="aAge">Enter age: </label>
+        <input type="text" th:field="*{accountAge}" id="aAge">
+        <br>
+        <br>
+        <label for="aBio">Enter bio: </label>
+        <input type="text" th:field="*{accountBio}" id="aBio">
+        <br>
+        <br>
+        <label for="aPhoto">Enter photo: </label>
+        <input type="text" th:field="*{accountPhoto}" id="aPhoto">
+        <br>
+        <br>
+        <input type="submit" value="Save!">
+    </form>
 
+
+</div>
 </body>
 </html>

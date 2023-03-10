@@ -62,7 +62,7 @@ public class StoreController {
 
     @GetMapping("/{userId}/createItem")
     public String storeCreateItem(@PathVariable("userId") int userId, Model model){
-        model.addAttribute("newProduct", new Product(storeDAO.searchUserNameNyId(userId)));
+        model.addAttribute("newProduct", new Product());
         model.addAttribute("idUser", userId);
         return "store/store-createitem-USERID";
     }
@@ -70,6 +70,8 @@ public class StoreController {
     @PostMapping("/postCreateProduct/{userId}")
     public String postStoreCreateItem(@PathVariable("userId") int userId,
                                       @ModelAttribute("newProduct") Product product){
+        System.out.println("id=" + userId + " name=" + storeDAO.searchUserNameNyId(userId));
+        product.setAuthor_id(String.valueOf(userId));
         storeDAO.saveProductInDb(product);
         return "redirect:/store/"+userId;
     }
