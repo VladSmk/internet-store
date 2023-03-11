@@ -7,12 +7,23 @@
 <body>
 <h1>Test</h1>
 
-<select name="user_city">
-    <option value="1">product1</option>
-    <option value="2">product2</option>
-    <option value="3">product3</option>
+
+<select id="product_id" onchange="updateColor()">
+    <option value="product1">Product1</option>
+    <option value="product2">Product2</option>
+    <option value="product3">Product3</option>
+    <option value="product4">Product4</option>
+    <option value="product5">Product5</option>
 </select>
 
+<p>Changed product: <span id="selected-product"> </span>  </p>
+
+<script>
+    function updateColor() {
+        var select = document.getElementById("product_id");
+        document.getElementById("selected-product").innerHTML = select.options[select.selectedIndex].text;
+    }
+</script>
 
 </body>
 </html>

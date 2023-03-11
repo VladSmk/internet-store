@@ -17,7 +17,8 @@ public class StoreController {
     }
 
     @GetMapping("/test")
-    public String testMethod(){
+    public String testMethod(Model model){
+        model.addAttribute("value", null);
         return "test";
     }
 
@@ -75,7 +76,6 @@ public class StoreController {
     @PostMapping("/postCreateProduct/{userId}")
     public String postStoreCreateItem(@PathVariable("userId") int userId,
                                       @ModelAttribute("newProduct") Product product){
-        System.out.println("id=" + userId + " name=" + storeDAO.searchUserNameById(userId));
         product.setAuthor_id(String.valueOf(userId));
         storeDAO.saveProductInDb(product);
         return "redirect:/store/"+userId;
@@ -83,9 +83,6 @@ public class StoreController {
 
     @GetMapping("/chi/{itemId}")
     public String changeItemsForSaleByItemId(@PathVariable("itemId") int itemId, Model model){
-        System.out.println("Author_id:"+storeDAO.searchProductById(itemId).getAuthor_id());
-        System.out.println("Id:"+storeDAO.searchProductById(itemId).getId());
-        System.out.println("Color_id:"+storeDAO.searchProductById(itemId).getColor_id());
 
         model.addAttribute("wantedProduct", storeDAO.searchProductById(itemId));
         model.addAttribute("itemId", itemId);
@@ -98,12 +95,16 @@ public class StoreController {
         product.setId(itemId);
         product.setAuthor_id(String.valueOf(storeDAO.getProductAuthorIdByProductId(itemId)));
 
-        System.out.println("Patch Author_id:"+product.getAuthor_id());
-        System.out.println("Patch Id:"+product.getId());
-        System.out.println("Patch Color_id:"+product.getColor_id());
-
         storeDAO.editProductInDb(product);
         return "redirect:/store/"+product.getAuthor_id();
+    }
+
+
+    @DeleteMapping("/deleteMyItem/{itemId}")
+    public String deleteMyItem(@PathVariable("itemId") int itemId){
+        int authorId = storeDAO.getProductAuthorIdByProductId(itemId);
+        storeDAO.deleteMyItemFromDb(itemId);
+        return "redirect:/store/myItem/"+authorId;
     }
 
 

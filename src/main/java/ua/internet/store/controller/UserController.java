@@ -75,7 +75,7 @@ public class UserController {
 
     @DeleteMapping("/deleteItemInBasket/{userId}/{itemId}")
     public String deleteItemInBasket(@PathVariable("userId") int userId,
-                                   @PathVariable("itemId") int itemId){
+                                     @PathVariable("itemId") int itemId){
         userDAO.deleteProductFromBasket(userId, itemId);
         return "redirect:/store/"+userId+"/lookItem/"+itemId;
     }

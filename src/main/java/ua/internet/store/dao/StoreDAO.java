@@ -392,6 +392,20 @@ public class StoreDAO {
         return null;
     }
 
+    public void deleteMyItemFromDb(int productId){
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "DELETE FROM internetshop.product WHERE id=?;"
+            );
+            preparedStatement.setInt(1, productId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error in deleteMyItemFromDb");
+        }
+    }
+
+
+
     public int searchProductIdByProductName(String productName){
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(

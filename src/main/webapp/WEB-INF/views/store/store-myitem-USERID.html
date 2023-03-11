@@ -41,7 +41,7 @@
                 </form>
             </div>
             <div class="padding-right-20">
-                <form th:method="DELETE" th:action="@{/store/postDeleteItem/{itemId}(itemId=${item.getId()})}">
+                <form th:method="DELETE" th:action="@{/store/deleteMyItem/{itemId}(itemId=${item.getId()})}">
                     <input type="submit" value="[x]">
                 </form>
             </div>

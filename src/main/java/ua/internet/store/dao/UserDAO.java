@@ -143,11 +143,25 @@ public class UserDAO {
 
     public void deleteAccountFromDb(int userId){
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(
+            PreparedStatement preparedStatement2 = connection.prepareStatement(
+                    "DELETE FROM internetshop.basket WHERE user_id=?;"
+            );
+            preparedStatement2.setInt(1, userId);
+            preparedStatement2.executeUpdate();
+
+
+            PreparedStatement preparedStatement1 = connection.prepareStatement(
+                    "DELETE FROM internetshop.product WHERE author_id=?;"
+            );
+            preparedStatement1.setInt(1, userId);
+            preparedStatement1.executeUpdate();
+
+
+            PreparedStatement preparedStatement3 = connection.prepareStatement(
                     "DELETE FROM internetshop.users WHERE id=?;"
             );
-            preparedStatement.setInt(1, userId);
-            preparedStatement.executeUpdate();
+            preparedStatement3.setInt(1, userId);
+            preparedStatement3.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error in deleteAccountFromDb(UserDAO)");
             throw new RuntimeException(e);
