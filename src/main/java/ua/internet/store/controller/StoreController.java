@@ -16,6 +16,11 @@ public class StoreController {
         this.storeDAO = storeDAO;
     }
 
+    @GetMapping("/test")
+    public String testMethod(){
+        return "test";
+    }
+
 
     @GetMapping()
     public String storeFirstPage(Model model){
@@ -40,7 +45,7 @@ public class StoreController {
 
     @GetMapping("/lookItem/{itemId}")
     public String storeLookItem(@PathVariable("itemId") int itemId, Model model){
-        model.addAttribute("objProduct", storeDAO.createProductById(itemId));
+        model.addAttribute("objProduct", storeDAO.searchProductById(itemId));
         return "store/store-lookitem-ITEMID";
     }
 
@@ -48,7 +53,7 @@ public class StoreController {
     public String storeUserLookItem(@PathVariable("itemId") int itemId,
                                     @PathVariable("userId") int userid,
                                     Model model){
-        model.addAttribute("objProduct", storeDAO.createProductById(itemId));
+        model.addAttribute("objProduct", storeDAO.searchProductById(itemId));
         model.addAttribute("objInBasket", storeDAO.checkProductInBasket(userid, itemId));
         model.addAttribute("idUser", userid);
         return "store/store-USERID-lookItem-ITEMID";
@@ -70,16 +75,35 @@ public class StoreController {
     @PostMapping("/postCreateProduct/{userId}")
     public String postStoreCreateItem(@PathVariable("userId") int userId,
                                       @ModelAttribute("newProduct") Product product){
-        System.out.println("id=" + userId + " name=" + storeDAO.searchUserNameNyId(userId));
+        System.out.println("id=" + userId + " name=" + storeDAO.searchUserNameById(userId));
         product.setAuthor_id(String.valueOf(userId));
         storeDAO.saveProductInDb(product);
         return "redirect:/store/"+userId;
     }
 
-
     @GetMapping("/chi/{itemId}")
-    public String changeItemsForSaleByItemId(@PathVariable("itemId") int userId){
+    public String changeItemsForSaleByItemId(@PathVariable("itemId") int itemId, Model model){
+        System.out.println("Author_id:"+storeDAO.searchProductById(itemId).getAuthor_id());
+        System.out.println("Id:"+storeDAO.searchProductById(itemId).getId());
+        System.out.println("Color_id:"+storeDAO.searchProductById(itemId).getColor_id());
+
+        model.addAttribute("wantedProduct", storeDAO.searchProductById(itemId));
+        model.addAttribute("itemId", itemId);
         return "store/store-chi-ITEMID";
+    }
+
+    @PatchMapping("/patchEditProduct/{itemId}")
+    public String patchMapEditProduct(@PathVariable("itemId") int itemId,
+                                      @ModelAttribute("wantedProduct") Product product){
+        product.setId(itemId);
+        product.setAuthor_id(String.valueOf(storeDAO.getProductAuthorIdByProductId(itemId)));
+
+        System.out.println("Patch Author_id:"+product.getAuthor_id());
+        System.out.println("Patch Id:"+product.getId());
+        System.out.println("Patch Color_id:"+product.getColor_id());
+
+        storeDAO.editProductInDb(product);
+        return "redirect:/store/"+product.getAuthor_id();
     }
 
 

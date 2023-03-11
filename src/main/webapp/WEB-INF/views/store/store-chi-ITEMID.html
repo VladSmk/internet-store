@@ -10,32 +10,49 @@
         .location-center{
             text-align: center;
         }
-        .color-red{
-            color: red;
-        }
     </style>
 </head>
 <body>
 <div class="location-center">
-    <h1>Change User Bio</h1>
+    <h1>Change Product</h1>
 
-    <form th:method="PATCH" th:action="@{/user/changeUser/{userId}(userId=${userId})}" th:object="${newUser}">
+    <form th:action="@{/store/patchEditProduct/{itemId}(itemId=${itemId})}" th:method="PATCH" th:object="${wantedProduct}">
         <br>
         <br>
-        <label for="aName">Enter name: </label>
-        <input type="text" th:field="*{accountName}" id="aName">
+        <label for="pName">Enter name: </label>
+        <input type="text" th:field="*{name}" id="pName">
         <br>
         <br>
-        <label for="aAge">Enter age: </label>
-        <input type="text" th:field="*{accountAge}" id="aAge">
+        <label for="aD">Enter description: </label>
+        <input type="text" th:field="*{description}" id="aD">
         <br>
         <br>
-        <label for="aBio">Enter bio: </label>
-        <input type="text" th:field="*{accountBio}" id="aBio">
+        <label for="aPrice">Enter price: </label>
+        <input type="text" th:field="*{price}" id="aPrice">
         <br>
         <br>
         <label for="aPhoto">Enter photo: </label>
-        <input type="text" th:field="*{accountPhoto}" id="aPhoto">
+        <input type="text" th:field="*{photo}" id="aPhoto">
+        <br>
+        <br>
+        <label for="aCountry">Enter Country: </label>
+        <input type="text" th:field="*{country_id}" id="aCountry">
+        <br>
+        <br>
+        <label for="aCity">Enter City: </label>
+        <input type="text" th:field="*{city_id}" id="aCity">
+        <br>
+        <br>
+        <label for="aColor">Enter Color: </label>
+        <input type="text" th:field="*{color_id}" id="aColor">
+        <br>
+        <br>
+        <label for="aFirm">Enter Firm: </label>
+        <input type="text" th:field="*{firm_id}" id="aFirm">
+        <br>
+        <br>
+        <label for="aType">Enter Type: </label>
+        <input type="text" th:field="*{type_id}" id="aType">
         <br>
         <br>
         <input type="submit" value="Save!">

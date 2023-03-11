@@ -36,7 +36,7 @@
                 </form>
             </div>
             <div class="padding-right-20">
-                <form th:method="PATCH" th:action="@{/store/{uId}/changeItem/{itemId}(itemId=${item.getId()}, uId=${userId})}">
+                <form th:action="@{/store/chi/{itemId}(itemId=${item.getId()})}">
                     <input type="submit" value="Change">
                 </form>
             </div>
