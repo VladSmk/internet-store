@@ -2,6 +2,7 @@ package ua.internet.store.dao;
 
 import org.springframework.stereotype.Component;
 import ua.internet.store.model.Product;
+import ua.internet.store.model.UpperFilter;
 import ua.internet.store.model.User;
 
 import java.sql.*;
@@ -67,10 +68,9 @@ public class StoreDAO {
             throw new RuntimeException(e);
         }
     }
-
-    public ArrayList<Product>[] arrayOfThreeList(){
+    public ArrayList<Product>[] arrayOfThreeList(ArrayList<Product> prodArrList){
         ArrayList<Product>[] arrayLists = new ArrayList[]{new ArrayList(), new ArrayList(), new ArrayList()};
-        Product[] products = findAllProduct().toArray(new Product[findAllProduct().size()]);
+        Product[] products = prodArrList.toArray(new Product[prodArrList.size()]);
         for(int i=0; i<products.length; i++){
             if(i%3==0) {
                 arrayLists[0].add(products[i]);
@@ -82,7 +82,6 @@ public class StoreDAO {
         }
         return arrayLists;
     }
-
     public User searchUserInDbById(int userId){
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -104,7 +103,6 @@ public class StoreDAO {
             throw new RuntimeException(e);
         }
     }
-
     public Product searchProductById(int productId){
         try {
             PreparedStatement preparedstatement = connection.prepareStatement(
@@ -138,7 +136,6 @@ public class StoreDAO {
             throw new RuntimeException(e);
         }
     }
-
     public boolean checkProductInBasket(int userId, int itemId){
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -153,22 +150,6 @@ public class StoreDAO {
             throw new RuntimeException(e);
         }
     }
-
-    public String searchUserNameById(int userId){
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "SELECT * FROM internetshop.users WHERE id=?;"
-            );
-            preparedStatement.setInt(1, userId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            return resultSet.getString("username");
-        } catch (SQLException e) {
-            System.out.println("Error in searchUserNameNyId(StoreDAO)");
-            throw new RuntimeException(e);
-        }
-    }
-
     public void saveProductInDb(Product product){
 
 
@@ -246,7 +227,6 @@ public class StoreDAO {
         }
 
     }
-
     public void editProductInDb(Product product){
 //        System.out.println("id: "+product.getId());
 //        System.out.println("name: "+product.getName());
@@ -330,9 +310,6 @@ public class StoreDAO {
 
 
     }
-
-
-
     private static int returnsTheExistingItemId(String tableName, String stringIdName, String stringName, String value){
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -355,7 +332,6 @@ public class StoreDAO {
             throw new RuntimeException(e);
         }
     }
-
     private static int returnsMaxIdFromTable(String tableName, String stringIdName){
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -369,7 +345,6 @@ public class StoreDAO {
         }
         return 0;
     }
-
     public ArrayList<Product> listProductByAuthorId(int authorId){
         try {
             ArrayList<Product> arrayList = new ArrayList<Product>();
@@ -391,7 +366,6 @@ public class StoreDAO {
         }
         return null;
     }
-
     public void deleteMyItemFromDb(int productId){
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -403,25 +377,6 @@ public class StoreDAO {
             System.out.println("Error in deleteMyItemFromDb");
         }
     }
-
-
-
-    public int searchProductIdByProductName(String productName){
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "SELECT * FROM internetshop.product WHERE product.name=?;"
-            );
-            preparedStatement.setString(1, productName);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()){
-                return resultSet.getInt("id");
-            }
-        } catch (SQLException e) {
-            System.out.println("Error in searchProductIdByProductName(StoreDAO)");
-        }
-        return 0;
-    }
-
     public int getProductAuthorIdByProductId(int productId){
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -437,8 +392,6 @@ public class StoreDAO {
         }
         return 0;
     }
-
-
     public ArrayList<String> getAllNamesFromTable(String tableName, String columnName){
         try {
             ArrayList<String> arrayList = new ArrayList<String>();
@@ -456,6 +409,83 @@ public class StoreDAO {
         }
         return null;
     }
+    public ArrayList<Product> getProductsAfterFiltering(UpperFilter upperFilter){
+        try {
+            String author_id, type_id, country_id, city_id;
+            ArrayList<Product> productArrayList = new ArrayList<Product>();
 
-
+            if(upperFilter.getAuthor().equals("-")) {
+                author_id="product.author_id";
+            } else {
+                author_id = String.valueOf(returnsTheExistingItemId(
+                                "users",
+                                "id",
+                                "username",
+                                upperFilter.getAuthor()
+                ));
+            }
+            if(upperFilter.getType().equals("-")){
+                type_id = "product.type_id";
+            } else {
+                type_id = String.valueOf(returnsTheExistingItemId(
+                                "types",
+                                "type_id",
+                                "type",
+                                upperFilter.getType()
+                ));
+            }
+            if(upperFilter.getCountry().equals("-")){
+                country_id = "product.country_id";
+            } else {
+                country_id=String.valueOf(returnsTheExistingItemId(
+                                "countries",
+                                "country_id",
+                                "country",
+                                upperFilter.getCountry()
+                ));
+            }
+            if(upperFilter.getCity().equals("-")){
+                city_id = "product.city_id";
+            } else {
+                city_id=String.valueOf(returnsTheExistingItemId(
+                                "cities",
+                                "city_id",
+                                "city",
+                                upperFilter.getCity()
+                ));
+            }
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM internetshop.product\n" +
+                            "INNER JOIN countries ON product.country_id=countries.country_id\n" +
+                            "INNER JOIN cities ON product.city_id=cities.city_id\n" +
+                            "INNER JOIN users ON product.author_id=users.id\n" +
+                            "INNER JOIN colors ON product.color_id=colors.color_id\n" +
+                            "INNER JOIN firms ON product.firm_id=firms.firm_id\n" +
+                            "INNER JOIN `types` ON product.type_id=`types`.type_id\n" +
+                            "WHERE product.author_id="+author_id+" and product.type_id="+type_id+" and \n" +
+                            "      product.country_id="+country_id+" and product.city_id="+city_id+";"
+            );
+            ResultSet resultSet =preparedStatement.executeQuery();
+            while (resultSet.next()){
+                Product product = new Product();
+                product.setId(resultSet.getInt("product.id"));
+                product.setName(resultSet.getString("product.name"));
+                product.setDescription(resultSet.getString("product.description"));
+                product.setPrice(resultSet.getDouble("product.price"));
+                product.setCountry_id(resultSet.getString("countries.country"));
+                product.setCity_id(resultSet.getString("cities.city"));
+                product.setPhoto(resultSet.getString("product.photo"));
+                product.setAuthor_id(resultSet.getString("users.username"));
+                product.setColor_id(resultSet.getString("colors.color"));
+                product.setFirm_id(resultSet.getString("firms.firm"));
+                product.setType_id(resultSet.getString("types.type"));
+                productArrayList.add(product);
+            }
+            System.out.println("sizeAftFiltering: "+productArrayList.size());
+            return productArrayList;
+        } catch (SQLException e) {
+            System.out.println("Error in getProductsAfterFilter(StoreDAO)");
+        }
+        return null;
+    }
 }

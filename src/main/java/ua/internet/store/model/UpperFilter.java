@@ -1,14 +1,14 @@
 package ua.internet.store.model;
 
-public class StoreInput {
+public class UpperFilter {
     private String type;
     private String country;
     private String city;
     private String author;
 
-    public StoreInput(){}
+    public UpperFilter(){}
 
-    public StoreInput(String type, String country, String city, String author) {
+    public UpperFilter(String type, String country, String city, String author) {
         this.type = type;
         this.country = country;
         this.city = city;

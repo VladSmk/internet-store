@@ -3,8 +3,6 @@ package ua.internet.store.dao;
 import org.springframework.stereotype.Component;
 import ua.internet.store.model.User;
 import ua.internet.store.model.UserPassword;
-
-import javax.swing.plaf.UIResource;
 import java.sql.*;
 
 @Component
@@ -72,7 +70,6 @@ public class UserDAO {
             throw new RuntimeException(e);
         }
     }
-
     public int searchIdByName(User user){
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -87,7 +84,6 @@ public class UserDAO {
         }
         return 0;
     }
-
     public void addProductToBasket(int userId, int itemId){
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -101,7 +97,6 @@ public class UserDAO {
             throw new RuntimeException(e);
         }
     }
-
     public void deleteProductFromBasket(int userId, int itemId){
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -115,7 +110,6 @@ public class UserDAO {
             throw new RuntimeException(e);
         }
     }
-
     public User searchAccountById(int userId){
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -140,7 +134,6 @@ public class UserDAO {
             throw new RuntimeException(e);
         }
     }
-
     public void deleteAccountFromDb(int userId){
         try {
             PreparedStatement preparedStatement2 = connection.prepareStatement(
@@ -183,7 +176,6 @@ public class UserDAO {
             throw new RuntimeException(e);
         }
     }
-
     public void setNewPassword(UserPassword userPassword){
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -197,7 +189,6 @@ public class UserDAO {
             throw new RuntimeException(e);
         }
     }
-
     public boolean passwordVerification(UserPassword userPassword){
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -212,7 +203,6 @@ public class UserDAO {
             throw new RuntimeException(e);
         }
     }
-
     public void updateUserInDb(User user){
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -230,6 +220,5 @@ public class UserDAO {
         }
 
     }
-
 
 }
