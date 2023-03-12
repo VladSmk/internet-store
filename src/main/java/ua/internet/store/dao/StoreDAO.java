@@ -438,4 +438,24 @@ public class StoreDAO {
         return 0;
     }
 
+
+    public ArrayList<String> getAllNamesFromTable(String tableName, String columnName){
+        try {
+            ArrayList<String> arrayList = new ArrayList<String>();
+            arrayList.add("-");
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM internetshop."+tableName+";"
+            );
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                arrayList.add(resultSet.getString(columnName));
+            }
+            return arrayList;
+        } catch (SQLException e) {
+            System.out.println("Error in getAllNamesFromTable(StoreDAO)");
+        }
+        return null;
+    }
+
+
 }

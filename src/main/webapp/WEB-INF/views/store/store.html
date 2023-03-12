@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <title>Store</title>
         <style>
-            body {background-color: lightblue;}
+            body {background-color: lightgreen;}
             .in-one-line{
                 display: flex;
                 flex-direction: row;
@@ -62,7 +62,46 @@
             </form>
         </div>
     </div>
+    <br>
+    <br>
 
+    <form th:method="POST" th:action="@{/store/testing}" th:object="${storeInput}">
+        <div class="in-one-line location-center-370px">
+
+            <div class="padding-left-30">
+                <a>Type: </a>
+                <br>
+                <select th:field="*{type}">
+                    <option th:each="type : ${listWithTypes}" th:value="${type}" th:text="${type}"></option>
+                </select>
+            </div>
+            <div class="padding-left-30">
+                <a>Country: </a>
+                <br>
+                <select th:field="*{country}">
+                    <option th:each="country : ${listWithCountries}" th:value="${country}" th:text="${country}"></option>
+                </select>
+            </div>
+            <div class="padding-left-30">
+                <a>City: </a>
+                <br>
+                <select th:field="*{city}">
+                    <option th:each="city : ${listWithCities}" th:value="${city}" th:text="${city}"></option>
+                </select>
+            </div>
+            <div class="padding-left-30">
+                <a>Author: </a>
+                <br>
+                <select th:field="*{author}">
+                    <option th:each="author : ${listWithAuthors}" th:value="${author}" th:text="${author}"></option>
+                </select>
+            </div>
+            <div class="padding-left-30">
+                <br>
+                <input type="submit" value="apply">
+            </div>
+        </div>
+    </form>
 
     <br>
     <br>
@@ -70,7 +109,6 @@
         <div class="in-one-line">
             <div>
                 <div th:each="pitem : ${firstColumn}">
-<!--                    <h2 th:text=" ${pitem.getName() + ', ' + pitem.getPrice() + '$ '}" >text</h2>-->
                     <form class="button-padding" th:action="@{/store/lookItem/{itemId}(itemId=${pitem.getId()})}">
                         <div class="buttons">
                             <input type="submit" th:value=" ${pitem.getName() + ', ' + pitem.getPrice() + '$ '}">
@@ -80,7 +118,6 @@
             </div>
             <div class="padding-left-200">
                 <div th:each="pitem : ${secondColumn}">
-<!--                    <h2 th:text=" ${pitem.getName() + ', ' + pitem.getPrice() + '$ '}" >text</h2>-->
                     <form class="button-padding" th:action="@{/store/lookItem/{itemId}(itemId=${pitem.getId()})}">
                         <div class="buttons">
                             <input type="submit" th:value=" ${pitem.getName() + ', ' + pitem.getPrice() + '$ '}">
@@ -100,5 +137,6 @@
         </div>
     </div>
 
-    </body>
+
+    <img src="../../../../resources/static/img/picture.jpg"/></body>
 </html>

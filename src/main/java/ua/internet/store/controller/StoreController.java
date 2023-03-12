@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.internet.store.dao.StoreDAO;
 import ua.internet.store.model.Product;
+import ua.internet.store.model.StoreInput;
 
 @Controller
 @RequestMapping("/store")
@@ -15,22 +16,55 @@ public class StoreController {
     public StoreController(StoreDAO storeDAO) {
         this.storeDAO = storeDAO;
     }
-
     @GetMapping("/test")
-    public String testMethod(Model model){
-        model.addAttribute("value", null);
-        return "test";
+    public String testMethod(){
+        return "static/images/test";
     }
-
-
     @GetMapping()
     public String storeFirstPage(Model model){
-        model.addAttribute("allProductsList", storeDAO.findAllProduct());
+        model.addAttribute("listWithCountries", storeDAO.getAllNamesFromTable(
+                "countries",
+                "country"
+        ));
+        model.addAttribute("listWithCities", storeDAO.getAllNamesFromTable(
+                "cities",
+                "city"
+        ));
+        model.addAttribute("listWithColors", storeDAO.getAllNamesFromTable(
+                "colors",
+                "color"
+        ));
+        model.addAttribute("listWithTypes", storeDAO.getAllNamesFromTable(
+                "types",
+                "type"
+        ));
+        model.addAttribute("listWithFirms", storeDAO.getAllNamesFromTable(
+                "firms",
+                "firm"
+        ));
+        model.addAttribute("listWithAuthors", storeDAO.getAllNamesFromTable(
+                "users",
+                "username"
+        ));
         model.addAttribute("firstColumn", storeDAO.arrayOfThreeList()[0]);
         model.addAttribute("secondColumn", storeDAO.arrayOfThreeList()[1]);
         model.addAttribute("thirdColumn", storeDAO.arrayOfThreeList()[2]);
+        model.addAttribute("min", 0);
+        model.addAttribute("max", 0);
+        model.addAttribute("storeInput", new StoreInput());
+
         return "store/store";
     }
+
+    @PostMapping("/testing")
+    public String testing(@ModelAttribute("storeInput") StoreInput storeInput){
+        System.out.println("type: "+storeInput.getType());
+        System.out.println("author: "+storeInput.getAuthor());
+        System.out.println("country: "+storeInput.getCountry());
+        System.out.println("city: "+storeInput.getCity());
+        return "redirect:/store";
+    }
+
 
     @GetMapping("/{userId}")
     public String storePageForSomeUser(@PathVariable("userId") int userId, Model model){
@@ -42,15 +76,13 @@ public class StoreController {
         model.addAttribute("thirdColumn", storeDAO.arrayOfThreeList()[2]);
         return "store/store-USERID";
     }
-
-
     @GetMapping("/lookItem/{itemId}")
     public String storeLookItem(@PathVariable("itemId") int itemId, Model model){
         model.addAttribute("objProduct", storeDAO.searchProductById(itemId));
         return "store/store-lookitem-ITEMID";
     }
-
     @GetMapping("/{userId}/lookItem/{itemId}")
+
     public String storeUserLookItem(@PathVariable("itemId") int itemId,
                                     @PathVariable("userId") int userid,
                                     Model model){
@@ -65,14 +97,12 @@ public class StoreController {
         model.addAttribute("userId", userId);
         return "store/store-myitem-USERID";
     }
-
     @GetMapping("/{userId}/createItem")
     public String storeCreateItem(@PathVariable("userId") int userId, Model model){
         model.addAttribute("newProduct", new Product());
         model.addAttribute("idUser", userId);
         return "store/store-createitem-USERID";
     }
-
     @PostMapping("/postCreateProduct/{userId}")
     public String postStoreCreateItem(@PathVariable("userId") int userId,
                                       @ModelAttribute("newProduct") Product product){
@@ -80,7 +110,6 @@ public class StoreController {
         storeDAO.saveProductInDb(product);
         return "redirect:/store/"+userId;
     }
-
     @GetMapping("/chi/{itemId}")
     public String changeItemsForSaleByItemId(@PathVariable("itemId") int itemId, Model model){
 
@@ -88,7 +117,6 @@ public class StoreController {
         model.addAttribute("itemId", itemId);
         return "store/store-chi-ITEMID";
     }
-
     @PatchMapping("/patchEditProduct/{itemId}")
     public String patchMapEditProduct(@PathVariable("itemId") int itemId,
                                       @ModelAttribute("wantedProduct") Product product){
@@ -98,16 +126,10 @@ public class StoreController {
         storeDAO.editProductInDb(product);
         return "redirect:/store/"+product.getAuthor_id();
     }
-
-
     @DeleteMapping("/deleteMyItem/{itemId}")
     public String deleteMyItem(@PathVariable("itemId") int itemId){
         int authorId = storeDAO.getProductAuthorIdByProductId(itemId);
         storeDAO.deleteMyItemFromDb(itemId);
         return "redirect:/store/myItem/"+authorId;
     }
-
-
-
-
 }
