@@ -19,6 +19,7 @@ public class StoreController {
         this.storeDAO = storeDAO;
     }
     private static ArrayList<Product> arrayListToStore = new ArrayList<Product>();
+    private static UpperFilter staticUpperFilter = new UpperFilter("-", "-", "-", "-");
     private static boolean oneTimeUsage = true;
     @GetMapping("/test")
     public String testMethod(){
@@ -54,21 +55,18 @@ public class StoreController {
             arrayListToStore = storeDAO.findAllProduct();
             oneTimeUsage=false;
         }
-        System.out.println("size:"+arrayListToStore.size());
 
         model.addAttribute("firstColumn", storeDAO.arrayOfThreeList(arrayListToStore)[0]);
         model.addAttribute("secondColumn", storeDAO.arrayOfThreeList(arrayListToStore)[1]);
         model.addAttribute("thirdColumn", storeDAO.arrayOfThreeList(arrayListToStore)[2]);
-        model.addAttribute("min", 0);
-        model.addAttribute("max", 0);
-        model.addAttribute("upperFilter", new UpperFilter());
+        model.addAttribute("upperFilter", staticUpperFilter);
         return "store/store";
     }
 
     @PostMapping("/postUpperFilter")
     public String postProductAfterUpperFilter(@ModelAttribute("storeInput") UpperFilter upperFilter){
-
-        arrayListToStore=storeDAO.getProductsAfterFiltering(upperFilter);
+        staticUpperFilter=upperFilter;
+        arrayListToStore=storeDAO.getProductsAfterFiltering(staticUpperFilter);
         return "redirect:/store";
     }
 

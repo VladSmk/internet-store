@@ -32,15 +32,20 @@
             .location-center-370px{
                 margin-left: 370px;
             }
+            .location-center-340px{
+                margin-left: 340px;
+            }
             .buttons{
                 padding-top: 30px;
             }
-
-            .center-button-buy{
-                text-align: center;
-            }
             .padding-left-30{
                 padding-left: 30px;
+            }
+            .padding-left-10{
+                padding-left: 10px;
+            }
+            .width-100{
+                width: 100px;
             }
 
 
@@ -66,8 +71,19 @@
     <br>
 
     <form th:method="POST" th:action="@{/store/postUpperFilter}" th:object="${upperFilter}">
-        <div class="in-one-line location-center-370px">
+        <div class="in-one-line location-center-340px">
 
+
+            <div class="padding-left-30">
+                <label for="minPrice">MinPrice: </label>
+                <br>
+                <input class="width-100" type="text" th:field="*{minPrice}" id="minPrice">
+            </div>
+            <div class="padding-left-10">
+                <label for="maxPrice">MaxPrice: </label>
+                <br>
+                <input class="width-100" type="text" th:field="*{maxPrice}" id="maxPrice">
+            </div>
             <div class="padding-left-30">
                 <a>Type: </a>
                 <br>

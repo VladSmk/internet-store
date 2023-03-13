@@ -1,5 +1,6 @@
 package ua.internet.store.dao;
 
+import com.mysql.cj.jdbc.CallableStatementWrapper;
 import org.springframework.stereotype.Component;
 import ua.internet.store.model.Product;
 import ua.internet.store.model.UpperFilter;
@@ -463,8 +464,11 @@ public class StoreDAO {
                             "INNER JOIN firms ON product.firm_id=firms.firm_id\n" +
                             "INNER JOIN `types` ON product.type_id=`types`.type_id\n" +
                             "WHERE product.author_id="+author_id+" and product.type_id="+type_id+" and \n" +
-                            "      product.country_id="+country_id+" and product.city_id="+city_id+";"
+                            "      product.country_id="+country_id+" and product.city_id="+city_id+" " +
+                            "and price>=? and price<=?;"
             );
+            preparedStatement.setDouble(1, upperFilter.getMinPrice());
+            preparedStatement.setDouble(2, upperFilter.getMaxPrice());
             ResultSet resultSet =preparedStatement.executeQuery();
             while (resultSet.next()){
                 Product product = new Product();
@@ -481,11 +485,35 @@ public class StoreDAO {
                 product.setType_id(resultSet.getString("types.type"));
                 productArrayList.add(product);
             }
-            System.out.println("sizeAftFiltering: "+productArrayList.size());
             return productArrayList;
         } catch (SQLException e) {
             System.out.println("Error in getProductsAfterFilter(StoreDAO)");
         }
         return null;
+    }
+
+    public Double getMaxProductPrice(){
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT MAX(price) FROM internetshop.product;"
+            );
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.getDouble("MAX(price)");
+        } catch (SQLException e) {
+            System.out.println("Error in getMaxProductPrice");
+        }
+        return 0.0;
+    }
+    public Double getMinProductPrice(){
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT MIN(price) FROM internetshop.product;"
+            );
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.getDouble("MIN(price)");
+        } catch (SQLException e) {
+            System.out.println("Error in getMinProductPrice");
+        }
+        return 0.0;
     }
 }

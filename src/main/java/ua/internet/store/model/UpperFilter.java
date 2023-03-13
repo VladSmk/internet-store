@@ -5,6 +5,34 @@ public class UpperFilter {
     private String country;
     private String city;
     private String author;
+    private double maxPrice;
+    private double minPrice;
+
+    public double getMinPrice() {
+        return minPrice;
+    }
+
+    public void setMinPrice(double minPrice) {
+        this.minPrice = minPrice;
+    }
+
+    public double getMaxPrice() {
+        return maxPrice;
+    }
+
+    public void setMaxPrice(double maxPrice) {
+        this.maxPrice = maxPrice;
+    }
+
+    public UpperFilter(String type, String country, String city, String author, double minPrice, double maxPrice) {
+        this.type = type;
+        this.country = country;
+        this.city = city;
+        this.author = author;
+        this.minPrice = minPrice;
+        this.maxPrice = maxPrice;
+    }
+
 
     public UpperFilter(){}
 
