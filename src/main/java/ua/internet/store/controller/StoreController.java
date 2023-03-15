@@ -5,10 +5,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.internet.store.dao.StoreDAO;
+import ua.internet.store.model.LeftFilter;
 import ua.internet.store.model.Product;
 import ua.internet.store.model.UpperFilter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @Controller
 @RequestMapping("/store")
@@ -22,8 +24,20 @@ public class StoreController {
     private static UpperFilter staticUpperFilter = new UpperFilter("-", "-", "-", "-");
     private static boolean oneTimeUsage = true;
     @GetMapping("/test")
-    public String testMethod(){
+    public String testMethod(Model model){
+        model.addAttribute("listWithColor", storeDAO.getListWithColor());
+        model.addAttribute("listWithFirm", storeDAO.getListWithFirm());
+        model.addAttribute("objLeftFilter", new LeftFilter());
         return "static/images/test";
+    }
+    @PostMapping("/test/")
+    public void processForm(@RequestParam("colorArray") String[] websites) {
+        for (String website : websites) {
+            System.out.println(website);
+        }
+    }
+    private String[] getWebsites() {
+        return new String[]{"Google", "Facebook", "Twitter", "LinkedIn"};
     }
     @GetMapping()
     public String storeFirstPage(Model model){
@@ -55,6 +69,11 @@ public class StoreController {
             arrayListToStore = storeDAO.findAllProduct();
             oneTimeUsage=false;
         }
+        model.addAttribute("listWithColor", storeDAO.getListWithColor());
+        model.addAttribute("listWithFirm", storeDAO.getListWithFirm());
+
+        model.addAttribute("objLeftFilter", new LeftFilter());
+
 
         model.addAttribute("firstColumn", storeDAO.arrayOfThreeList(arrayListToStore)[0]);
         model.addAttribute("secondColumn", storeDAO.arrayOfThreeList(arrayListToStore)[1]);
@@ -67,6 +86,20 @@ public class StoreController {
     public String postProductAfterUpperFilter(@ModelAttribute("storeInput") UpperFilter upperFilter){
         staticUpperFilter=upperFilter;
         arrayListToStore=storeDAO.getProductsAfterFiltering(staticUpperFilter);
+        return "redirect:/store";
+    }
+
+    @PostMapping("/postLeftFilter")
+    public String postProductAfterLeftFilter(@RequestParam("colorArray") String[] stringsWithColor,
+                       @RequestParam("firmArray") String[] stringsWithFirm){
+        System.out.println("Color: ");
+        for(String str : stringsWithColor)
+            System.out.println(str);
+        System.out.println("Firm: ");
+        for(String str : stringsWithFirm)
+            System.out.println(str);
+
+
         return "redirect:/store";
     }
 

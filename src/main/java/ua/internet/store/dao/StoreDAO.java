@@ -2,6 +2,7 @@ package ua.internet.store.dao;
 
 import com.mysql.cj.jdbc.CallableStatementWrapper;
 import org.springframework.stereotype.Component;
+import ua.internet.store.model.LeftFilter;
 import ua.internet.store.model.Product;
 import ua.internet.store.model.UpperFilter;
 import ua.internet.store.model.User;
@@ -515,5 +516,68 @@ public class StoreDAO {
             System.out.println("Error in getMinProductPrice");
         }
         return 0.0;
+    }
+    public ArrayList<String> getListWithColor(){
+        try {
+            ArrayList<String> arrayList = new ArrayList<String>();
+            PreparedStatement colorPreparedStatement = connection.prepareStatement(
+                    "SELECT * FROM internetshop.colors;"
+            );
+            ResultSet resultSet = colorPreparedStatement.executeQuery();
+            while(resultSet.next()){
+                arrayList.add(resultSet.getString("color"));
+            }
+            return arrayList;
+        } catch (SQLException e) {
+            System.out.println("Error in getListWithColor(StoreDAO)");
+        }
+        return null;
+    }
+    public ArrayList<String> getListWithFirm(){
+        try {
+            ArrayList<String> arrayList = new ArrayList<String>();
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM internetshop.firms;"
+            );
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                arrayList.add(resultSet.getString("firm"));
+            }
+            return arrayList;
+        } catch (SQLException e) {
+            System.out.println("Error in getListWithTypes(StoreDAO)");
+        }
+        return null;
+    }
+    public ArrayList<String> filterToLeftFilter(String[] strings){
+//        for(String str : strings){
+//            try {
+//                PreparedStatement preparedStatement = connection.prepareStatement(
+//                        "SELECT * FROM internetshop.product\n" +
+//                                "INNER JOIN countries ON product.country_id=countries.country_id\n" +
+//                                "INNER JOIN cities ON product.city_id=cities.city_id\n" +
+//                                "INNER JOIN users ON product.author_id=users.id\n" +
+//                                "INNER JOIN colors ON product.color_id=colors.color_id\n" +
+//                                "INNER JOIN firms ON product.firm_id=firms.firm_id\n" +
+//                                "INNER JOIN `types` ON product.type_id=`types`.type_id\n" +
+//                                "WHERE product.color_id="+str+";"
+//                );
+//            } catch (SQLException e) {
+//                System.out.println("Error in ");
+//            }
+//
+//
+//        }
+
+        return null;
+    }
+
+    public ArrayList<String> getRecurringItemFromTwoArray(String[] str1,String[] str2){
+        ArrayList<String> arrayList = new ArrayList<String>();
+        for(String s1 : str1)
+            for (String s2 : str2)
+                if (s1.equals(s2))
+                    arrayList.add(s1);
+        return arrayList;
     }
 }
