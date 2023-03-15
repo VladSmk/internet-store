@@ -21,24 +21,24 @@ public class StoreController {
         this.storeDAO = storeDAO;
     }
     private static ArrayList<Product> arrayListToStore = new ArrayList<Product>();
-    private static UpperFilter staticUpperFilter = new UpperFilter("-", "-", "-", "-");
+    private static UpperFilter staticUpperFilter = new UpperFilter("-", "-", "-", "-","-","-");
     private static boolean oneTimeUsage = true;
-    @GetMapping("/test")
-    public String testMethod(Model model){
-        model.addAttribute("listWithColor", storeDAO.getListWithColor());
-        model.addAttribute("listWithFirm", storeDAO.getListWithFirm());
-        model.addAttribute("objLeftFilter", new LeftFilter());
-        return "static/images/test";
-    }
-    @PostMapping("/test/")
-    public void processForm(@RequestParam("colorArray") String[] websites) {
-        for (String website : websites) {
-            System.out.println(website);
-        }
-    }
-    private String[] getWebsites() {
-        return new String[]{"Google", "Facebook", "Twitter", "LinkedIn"};
-    }
+//    @GetMapping("/test")
+//    public String testMethod(Model model){
+//        model.addAttribute("listWithColor", storeDAO.getListWithColor());
+//        model.addAttribute("listWithFirm", storeDAO.getListWithFirm());
+//        model.addAttribute("objLeftFilter", new LeftFilter());
+//        return "static/images/test";
+//    }
+//    @PostMapping("/test/")
+//    public void processForm(@RequestParam("colorArray") String[] websites) {
+//        for (String website : websites) {
+//            System.out.println(website);
+//        }
+//    }
+//    private String[] getWebsites() {
+//        return new String[]{"Google", "Facebook", "Twitter", "LinkedIn"};
+//    }
     @GetMapping()
     public String storeFirstPage(Model model){
         model.addAttribute("listWithCountries", storeDAO.getAllNamesFromTable(
@@ -69,10 +69,6 @@ public class StoreController {
             arrayListToStore = storeDAO.findAllProduct();
             oneTimeUsage=false;
         }
-        model.addAttribute("listWithColor", storeDAO.getListWithColor());
-        model.addAttribute("listWithFirm", storeDAO.getListWithFirm());
-
-        model.addAttribute("objLeftFilter", new LeftFilter());
 
 
         model.addAttribute("firstColumn", storeDAO.arrayOfThreeList(arrayListToStore)[0]);
@@ -89,19 +85,27 @@ public class StoreController {
         return "redirect:/store";
     }
 
-    @PostMapping("/postLeftFilter")
-    public String postProductAfterLeftFilter(@RequestParam("colorArray") String[] stringsWithColor,
-                       @RequestParam("firmArray") String[] stringsWithFirm){
-        System.out.println("Color: ");
-        for(String str : stringsWithColor)
-            System.out.println(str);
-        System.out.println("Firm: ");
-        for(String str : stringsWithFirm)
-            System.out.println(str);
-
-
+    @PostMapping("/postSearchBar")
+    public String postProductSearchBar(@RequestParam("partOfWord") String partOfWord){
+//        System.out.println("|" + partOfWord + "|");
+        if(partOfWord=="")
+            arrayListToStore=storeDAO.findAllProduct();
+        else
+            arrayListToStore=storeDAO.listProductByPartOfAuthorName(partOfWord);
         return "redirect:/store";
     }
+
+//    @PostMapping("/postLeftFilter")
+//    public String postProductAfterLeftFilter(@RequestParam("colorArray") String[] stringsWithColor,
+//                       @RequestParam("firmArray") String[] stringsWithFirm){
+//        System.out.println("Color: ");
+//        for(String str : stringsWithColor)
+//            System.out.println(str);
+//        System.out.println("Firm: ");
+//        for(String str : stringsWithFirm)
+//            System.out.println(str);
+//        return "redirect:/store";
+//    }
 
 
     @GetMapping("/{userId}")

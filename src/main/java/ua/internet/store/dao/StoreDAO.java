@@ -413,7 +413,7 @@ public class StoreDAO {
     }
     public ArrayList<Product> getProductsAfterFiltering(UpperFilter upperFilter){
         try {
-            String author_id, type_id, country_id, city_id;
+            String author_id, type_id, country_id, city_id, color_id, firm_id;
             ArrayList<Product> productArrayList = new ArrayList<Product>();
 
             if(upperFilter.getAuthor().equals("-")) {
@@ -456,6 +456,27 @@ public class StoreDAO {
                                 upperFilter.getCity()
                 ));
             }
+            if(upperFilter.getColor().equals("-")){
+                color_id = "product.color_id";
+            } else {
+                color_id=String.valueOf(returnsTheExistingItemId(
+                        "colors",
+                        "color_id",
+                        "color",
+                        upperFilter.getColor()
+                ));
+            }
+            if(upperFilter.getFirm().equals("-")){
+                firm_id = "product.firm_id";
+            } else {
+                firm_id=String.valueOf(returnsTheExistingItemId(
+                        "firms",
+                        "firm_id",
+                        "firm",
+                        upperFilter.getFirm()
+                ));
+            }
+            System.out.println("YES");
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "SELECT * FROM internetshop.product\n" +
                             "INNER JOIN countries ON product.country_id=countries.country_id\n" +
@@ -464,14 +485,17 @@ public class StoreDAO {
                             "INNER JOIN colors ON product.color_id=colors.color_id\n" +
                             "INNER JOIN firms ON product.firm_id=firms.firm_id\n" +
                             "INNER JOIN `types` ON product.type_id=`types`.type_id\n" +
-                            "WHERE product.author_id="+author_id+" and product.type_id="+type_id+" and \n" +
+                            "WHERE product.author_id="+author_id+"   and product.type_id="+type_id+" and \n" +
                             "      product.country_id="+country_id+" and product.city_id="+city_id+" " +
+                            "      product.firm_id="+firm_id+"       and product.color_id="+color_id+" " +
                             "and price>=? and price<=?;"
             );
+            System.out.println("YES2");
             preparedStatement.setDouble(1, upperFilter.getMinPrice());
             preparedStatement.setDouble(2, upperFilter.getMaxPrice());
-            ResultSet resultSet =preparedStatement.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
+                System.out.println("YES3");
                 Product product = new Product();
                 product.setId(resultSet.getInt("product.id"));
                 product.setName(resultSet.getString("product.name"));
@@ -484,6 +508,7 @@ public class StoreDAO {
                 product.setColor_id(resultSet.getString("colors.color"));
                 product.setFirm_id(resultSet.getString("firms.firm"));
                 product.setType_id(resultSet.getString("types.type"));
+                System.out.println("YES4");
                 productArrayList.add(product);
             }
             return productArrayList;
@@ -492,6 +517,57 @@ public class StoreDAO {
         }
         return null;
     }
+
+    public ArrayList<Product> listProductByPartOfAuthorName(String partOfName){
+        try {
+            ArrayList<Product> productArrayList = new ArrayList<Product>();
+            int quantity = 0;
+            String nameString;
+            Product product;
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM internetshop.product\n" +
+                            "INNER JOIN countries ON product.country_id=countries.country_id\n" +
+                            "INNER JOIN cities ON product.city_id=cities.city_id \n" +
+                            "INNER JOIN users ON product.author_id=users.id\n" +
+                            "INNER JOIN colors ON product.color_id=colors.color_id\n" +
+                            "INNER JOIN firms ON product.firm_id=firms.firm_id\n" +
+                            "INNER JOIN `types` ON product.type_id=`types`.type_id;"
+            );
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                if(partOfName.length()<=resultSet.getString("name").length()){
+                    nameString = resultSet.getString("name");
+                    for(int i=0; i<partOfName.length(); i++){
+                        if (partOfName.toCharArray()[i]==nameString.toCharArray()[i])
+                            quantity++;
+                        else
+                            break;
+                        if (quantity==partOfName.length()) {
+                            product = new Product();
+                            product.setId(resultSet.getInt("id"));
+                            product.setName(resultSet.getString("name"));
+                            product.setDescription(resultSet.getString("description"));
+                            product.setPrice(resultSet.getDouble("price"));
+                            product.setCountry_id(resultSet.getString("country"));
+                            product.setCity_id(resultSet.getString("city"));
+                            product.setPhoto(resultSet.getString("photo"));
+                            product.setAuthor_id(resultSet.getString("username"));
+                            product.setColor_id(resultSet.getString("color"));
+                            product.setFirm_id(resultSet.getString("firm"));
+                            product.setType_id(resultSet.getString("type"));
+                            productArrayList.add(product);
+                        }
+                    }
+                }
+            }
+            return productArrayList;
+        } catch (SQLException e) {
+            System.out.println("Error listProductByPartOfAuthorName(StoreDAO)");
+        }
+        return null;
+    }
+
+
 
     public Double getMaxProductPrice(){
         try {
@@ -549,28 +625,28 @@ public class StoreDAO {
         }
         return null;
     }
-    public ArrayList<String> filterToLeftFilter(String[] strings){
-//        for(String str : strings){
-//            try {
-//                PreparedStatement preparedStatement = connection.prepareStatement(
-//                        "SELECT * FROM internetshop.product\n" +
-//                                "INNER JOIN countries ON product.country_id=countries.country_id\n" +
-//                                "INNER JOIN cities ON product.city_id=cities.city_id\n" +
-//                                "INNER JOIN users ON product.author_id=users.id\n" +
-//                                "INNER JOIN colors ON product.color_id=colors.color_id\n" +
-//                                "INNER JOIN firms ON product.firm_id=firms.firm_id\n" +
-//                                "INNER JOIN `types` ON product.type_id=`types`.type_id\n" +
-//                                "WHERE product.color_id="+str+";"
-//                );
-//            } catch (SQLException e) {
-//                System.out.println("Error in ");
-//            }
+//    public ArrayList<String> filterToLeftFilter(String[] strings){
+////        for(String str : strings){
+////            try {
+////                PreparedStatement preparedStatement = connection.prepareStatement(
+////                        "SELECT * FROM internetshop.product\n" +
+////                                "INNER JOIN countries ON product.country_id=countries.country_id\n" +
+////                                "INNER JOIN cities ON product.city_id=cities.city_id\n" +
+////                                "INNER JOIN users ON product.author_id=users.id\n" +
+////                                "INNER JOIN colors ON product.color_id=colors.color_id\n" +
+////                                "INNER JOIN firms ON product.firm_id=firms.firm_id\n" +
+////                                "INNER JOIN `types` ON product.type_id=`types`.type_id\n" +
+////                                "WHERE product.color_id="+str+";"
+////                );
+////            } catch (SQLException e) {
+////                System.out.println("Error in ");
+////            }
+////
+////
+////        }
 //
-//
-//        }
-
-        return null;
-    }
+//        return null;
+//    }
 
     public ArrayList<String> getRecurringItemFromTwoArray(String[] str1,String[] str2){
         ArrayList<String> arrayList = new ArrayList<String>();

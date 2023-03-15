@@ -5,6 +5,9 @@ public class UpperFilter {
     private String country;
     private String city;
     private String author;
+    private String color;
+    private String firm;
+
     private double maxPrice;
     private double minPrice;
 
@@ -24,15 +27,14 @@ public class UpperFilter {
         this.maxPrice = maxPrice;
     }
 
-    public UpperFilter(String type, String country, String city, String author, double minPrice, double maxPrice) {
+    public UpperFilter(String type, String country, String city, String author, String color, String firm) {
         this.type = type;
         this.country = country;
         this.city = city;
         this.author = author;
-        this.minPrice = minPrice;
-        this.maxPrice = maxPrice;
+        this.color = color;
+        this.firm = firm;
     }
-
 
     public UpperFilter(){}
 
@@ -49,6 +51,22 @@ public class UpperFilter {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getFirm() {
+        return firm;
+    }
+
+    public void setFirm(String firm) {
+        this.firm = firm;
     }
 
     public String getCountry() {

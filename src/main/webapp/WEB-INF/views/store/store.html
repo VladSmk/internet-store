@@ -33,10 +33,10 @@
                 padding-left: 50px;
             }
             .location-center-370px{
-                margin-left: 50px;
+                margin-left: 300px;
             }
-            .location-center-340px{
-                margin-left: 340px;
+            .location-center-250px{
+                margin-left: 250px;
             }
             .buttons{
                 padding-top: 30px;
@@ -46,6 +46,9 @@
             }
             .padding-left-10{
                 padding-left: 10px;
+            }
+            .margin-left-670{
+                margin-left: 670px;
             }
             .width-100{
                 width: 100px;
@@ -72,9 +75,22 @@
     </div>
     <br>
     <br>
-
+    <div class="margin-left-670">
+        <form th:method="POST" th:action="@{/store/postSearchBar}">
+            <div class="in-one-line">
+                <div>
+                    <input type="text" th:name="'partOfWord'">
+                </div>
+                <div class="padding-left-30">
+                    <input type="submit" value="search">
+                </div>
+            </div>
+        </form>
+    </div>
+    <br>
+    <br>
     <form th:method="POST" th:action="@{/store/postUpperFilter}" th:object="${upperFilter}">
-        <div class="in-one-line location-center-340px">
+        <div class="in-one-line location-center-250px">
 
 
             <div class="padding-left-30">
@@ -116,6 +132,20 @@
                 </select>
             </div>
             <div class="padding-left-30">
+                <a>Firm: </a>
+                <br>
+                <select th:field="*{firm}">
+                    <option th:each="firm : ${listWithFirms}" th:value="${firm}" th:text="${firm}"></option>
+                </select>
+            </div>
+            <div class="padding-left-30">
+                <a>Color: </a>
+                <br>
+                <select th:field="*{color}">
+                    <option th:each="color : ${listWithColors}" th:value="${color}" th:text="${color}"></option>
+                </select>
+            </div>
+            <div class="padding-left-30">
                 <br>
                 <input type="submit" value="apply">
             </div>
@@ -126,29 +156,29 @@
     <br>
     <div class="location-center-370px">
         <div class="in-one-line">
-            <form th:method="POST" th:action="@{/store/postLeftFilter}" th:object="${objLeftFilter}">
-                <div class="in-one-line">
-                    <div>
-                        <a>Firm:</a>
-                        <br>
-                        <div th:each="firm : ${listWithFirm}">
-                            <input type="checkbox" th:name="'firmArray'" th:value="${firm}" />
-                            <span th:text="${firm}"></span>
-                        </div>
-                    </div>
-                    <div class="padding-left-50">
-                        <a>Color:</a>
-                        <br>
-                        <div th:each="color : ${listWithColor}">
-                            <input type="checkbox" th:name="'colorArray'" th:value="${color}" />
-                            <span th:text="${color}"></span>
-                        </div>
-                    </div>
-                    <div class="padding-left-50">
-                        <input type="submit" value="apply">
-                    </div>
-                </div>
-            </form>
+<!--            <form th:method="POST" th:action="@{/store/postLeftFilter}" th:object="${objLeftFilter}">-->
+<!--                <div class="in-one-line">-->
+<!--                    <div>-->
+<!--                        <a>Firm:</a>-->
+<!--                        <br>-->
+<!--                        <div th:each="firm : ${listWithFirm}">-->
+<!--                            <input type="checkbox" th:name="'firmArray'" th:value="${firm}" />-->
+<!--                            <span th:text="${firm}"></span>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="padding-left-50">-->
+<!--                        <a>Color:</a>-->
+<!--                        <br>-->
+<!--                        <div th:each="color : ${listWithColor}">-->
+<!--                            <input type="checkbox" th:name="'colorArray'" th:value="${color}" />-->
+<!--                            <span th:text="${color}"></span>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="padding-left-50">-->
+<!--                        <input type="submit" value="apply">-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </form>-->
 
 
             <div class="padding-left-200">
