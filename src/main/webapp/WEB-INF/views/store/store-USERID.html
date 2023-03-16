@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Store</title>
     <style>
-        body {background-color: lightblue;}
         .in-one-line{
             display: flex;
             flex-direction: row;
@@ -25,11 +24,33 @@
             font-size: 30px;
             font-weight: bold;
         }
+
         .padding-left-200{
-            padding-left: 200px;
+            padding-left: 150px;
         }
-        .location-center{
-            margin-left: 370px;
+        .padding-left-50{
+            padding-left: 50px;
+        }
+        .location-center-370px{
+            margin-left: 300px;
+        }
+        .location-center-250px{
+            margin-left: 250px;
+        }
+        .buttons{
+            padding-top: 30px;
+        }
+        .padding-left-30{
+            padding-left: 30px;
+        }
+        .padding-left-10{
+            padding-left: 10px;
+        }
+        .margin-left-670{
+            margin-left: 670px;
+        }
+        .width-100{
+            width: 100px;
         }
 
         .buttons{
@@ -62,9 +83,88 @@
 
 <br>
 <br>
-<div class="location-center">
+<div class="margin-left-670">
+    <form th:method="POST" th:action="@{/store/postUserSearchBar/{userId}(userId=${idUser})}">
+        <div class="in-one-line">
+            <div>
+                <input type="text" th:name="'partOfWord'">
+            </div>
+            <div class="padding-left-30">
+                <input type="submit" value="search">
+            </div>
+        </div>
+    </form>
+</div>
+<br>
+<br>
+<form th:method="POST" th:action="@{/store/postUserUpperFilter/{userId}(userId=${idUser})}" th:object="${upperFilter}">
+    <div class="in-one-line location-center-250px">
+
+
+        <div class="padding-left-30">
+            <label for="minPrice">MinPrice: </label>
+            <br>
+            <input class="width-100" type="text" th:field="*{minPrice}" id="minPrice">
+        </div>
+        <div class="padding-left-10">
+            <label for="maxPrice">MaxPrice: </label>
+            <br>
+            <input class="width-100" type="text" th:field="*{maxPrice}" id="maxPrice">
+        </div>
+        <div class="padding-left-30">
+            <a>Type: </a>
+            <br>
+            <select th:field="*{type}">
+                <option th:each="type : ${listWithTypes}" th:value="${type}" th:text="${type}"></option>
+            </select>
+        </div>
+        <div class="padding-left-30">
+            <a>Country: </a>
+            <br>
+            <select th:field="*{country}">
+                <option th:each="country : ${listWithCountries}" th:value="${country}" th:text="${country}"></option>
+            </select>
+        </div>
+        <div class="padding-left-30">
+            <a>City: </a>
+            <br>
+            <select th:field="*{city}">
+                <option th:each="city : ${listWithCities}" th:value="${city}" th:text="${city}"></option>
+            </select>
+        </div>
+        <div class="padding-left-30">
+            <a>Author: </a>
+            <br>
+            <select th:field="*{author}">
+                <option th:each="author : ${listWithAuthors}" th:value="${author}" th:text="${author}"></option>
+            </select>
+        </div>
+        <div class="padding-left-30">
+            <a>Firm: </a>
+            <br>
+            <select th:field="*{firm}">
+                <option th:each="firm : ${listWithFirms}" th:value="${firm}" th:text="${firm}"></option>
+            </select>
+        </div>
+        <div class="padding-left-30">
+            <a>Color: </a>
+            <br>
+            <select th:field="*{color}">
+                <option th:each="color : ${listWithColors}" th:value="${color}" th:text="${color}"></option>
+            </select>
+        </div>
+        <div class="padding-left-30">
+            <br>
+            <input type="submit" value="apply">
+        </div>
+    </div>
+</form>
+
+<br>
+<br>
+<div class="location-center-370px">
     <div class="in-one-line">
-        <div>
+        <div class="padding-left-200">
             <div th:each="pitem : ${firstColumn}">
                 <form class="button-padding" th:action="@{/store/{uId}/lookItem/{itemId}(itemId=${pitem.getId()}, uId=${userId})}">
                     <div class="buttons">
@@ -93,7 +193,6 @@
         </div>
     </div>
 </div>
-
 
 </body>
 </html>

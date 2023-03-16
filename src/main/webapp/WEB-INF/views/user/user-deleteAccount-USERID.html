@@ -5,9 +5,6 @@
     <link rel="stylesheet" type="text/css" href="../static/user-settings.css">
     <title>Delete</title>
     <style>
-        body {
-            background-color: lightblue;
-        }
         .location-center{
             text-align: center
         }
@@ -72,6 +69,7 @@
         <br>
         <label for="da">Enter your password:</label>
         <input type="password" th:field="*{accountPassword}" id="da">
+        <br>
         <br>
         <input type="submit" th:value="deleteAccount">
     </form>

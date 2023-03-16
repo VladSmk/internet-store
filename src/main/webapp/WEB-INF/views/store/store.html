@@ -4,7 +4,6 @@
         <meta charset="UTF-8">
         <title>Store</title>
         <style>
-            body {background-color: lightgreen;}
             .in-one-line{
                 display: flex;
                 flex-direction: row;
@@ -156,31 +155,6 @@
     <br>
     <div class="location-center-370px">
         <div class="in-one-line">
-<!--            <form th:method="POST" th:action="@{/store/postLeftFilter}" th:object="${objLeftFilter}">-->
-<!--                <div class="in-one-line">-->
-<!--                    <div>-->
-<!--                        <a>Firm:</a>-->
-<!--                        <br>-->
-<!--                        <div th:each="firm : ${listWithFirm}">-->
-<!--                            <input type="checkbox" th:name="'firmArray'" th:value="${firm}" />-->
-<!--                            <span th:text="${firm}"></span>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="padding-left-50">-->
-<!--                        <a>Color:</a>-->
-<!--                        <br>-->
-<!--                        <div th:each="color : ${listWithColor}">-->
-<!--                            <input type="checkbox" th:name="'colorArray'" th:value="${color}" />-->
-<!--                            <span th:text="${color}"></span>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="padding-left-50">-->
-<!--                        <input type="submit" value="apply">-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </form>-->
-
-
             <div class="padding-left-200">
                 <div th:each="pitem : ${firstColumn}">
                     <form class="button-padding" th:action="@{/store/lookItem/{itemId}(itemId=${pitem.getId()})}">

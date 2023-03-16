@@ -1,6 +1,7 @@
 package ua.internet.store.dao;
 
 import com.mysql.cj.jdbc.CallableStatementWrapper;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.stereotype.Component;
 import ua.internet.store.model.LeftFilter;
 import ua.internet.store.model.Product;
@@ -476,7 +477,6 @@ public class StoreDAO {
                         upperFilter.getFirm()
                 ));
             }
-            System.out.println("YES");
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "SELECT * FROM internetshop.product\n" +
                             "INNER JOIN countries ON product.country_id=countries.country_id\n" +
@@ -486,16 +486,13 @@ public class StoreDAO {
                             "INNER JOIN firms ON product.firm_id=firms.firm_id\n" +
                             "INNER JOIN `types` ON product.type_id=`types`.type_id\n" +
                             "WHERE product.author_id="+author_id+"   and product.type_id="+type_id+" and \n" +
-                            "      product.country_id="+country_id+" and product.city_id="+city_id+" " +
-                            "      product.firm_id="+firm_id+"       and product.color_id="+color_id+" " +
-                            "and price>=? and price<=?;"
+                            "      product.country_id="+country_id+" and product.city_id="+city_id+" and \n" +
+                            "      product.firm_id="+firm_id+"       and product.color_id="+color_id+" and price>=? and price<=?;"
             );
-            System.out.println("YES2");
             preparedStatement.setDouble(1, upperFilter.getMinPrice());
             preparedStatement.setDouble(2, upperFilter.getMaxPrice());
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
-                System.out.println("YES3");
                 Product product = new Product();
                 product.setId(resultSet.getInt("product.id"));
                 product.setName(resultSet.getString("product.name"));
@@ -508,7 +505,6 @@ public class StoreDAO {
                 product.setColor_id(resultSet.getString("colors.color"));
                 product.setFirm_id(resultSet.getString("firms.firm"));
                 product.setType_id(resultSet.getString("types.type"));
-                System.out.println("YES4");
                 productArrayList.add(product);
             }
             return productArrayList;
@@ -517,12 +513,12 @@ public class StoreDAO {
         }
         return null;
     }
-
     public ArrayList<Product> listProductByPartOfAuthorName(String partOfName){
         try {
             ArrayList<Product> productArrayList = new ArrayList<Product>();
             int quantity = 0;
             String nameString;
+            boolean b;
             Product product;
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "SELECT * FROM internetshop.product\n" +
@@ -537,11 +533,13 @@ public class StoreDAO {
             while (resultSet.next()){
                 if(partOfName.length()<=resultSet.getString("name").length()){
                     nameString = resultSet.getString("name");
+                    b = true;
+                    quantity=0;
                     for(int i=0; i<partOfName.length(); i++){
-                        if (partOfName.toCharArray()[i]==nameString.toCharArray()[i])
+                        if (partOfName.toCharArray()[i]==nameString.toCharArray()[i] && b)
                             quantity++;
                         else
-                            break;
+                            b = false;
                         if (quantity==partOfName.length()) {
                             product = new Product();
                             product.setId(resultSet.getInt("id"));
@@ -567,93 +565,4 @@ public class StoreDAO {
         return null;
     }
 
-
-
-    public Double getMaxProductPrice(){
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "SELECT MAX(price) FROM internetshop.product;"
-            );
-            ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.getDouble("MAX(price)");
-        } catch (SQLException e) {
-            System.out.println("Error in getMaxProductPrice");
-        }
-        return 0.0;
-    }
-    public Double getMinProductPrice(){
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "SELECT MIN(price) FROM internetshop.product;"
-            );
-            ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.getDouble("MIN(price)");
-        } catch (SQLException e) {
-            System.out.println("Error in getMinProductPrice");
-        }
-        return 0.0;
-    }
-    public ArrayList<String> getListWithColor(){
-        try {
-            ArrayList<String> arrayList = new ArrayList<String>();
-            PreparedStatement colorPreparedStatement = connection.prepareStatement(
-                    "SELECT * FROM internetshop.colors;"
-            );
-            ResultSet resultSet = colorPreparedStatement.executeQuery();
-            while(resultSet.next()){
-                arrayList.add(resultSet.getString("color"));
-            }
-            return arrayList;
-        } catch (SQLException e) {
-            System.out.println("Error in getListWithColor(StoreDAO)");
-        }
-        return null;
-    }
-    public ArrayList<String> getListWithFirm(){
-        try {
-            ArrayList<String> arrayList = new ArrayList<String>();
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "SELECT * FROM internetshop.firms;"
-            );
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
-                arrayList.add(resultSet.getString("firm"));
-            }
-            return arrayList;
-        } catch (SQLException e) {
-            System.out.println("Error in getListWithTypes(StoreDAO)");
-        }
-        return null;
-    }
-//    public ArrayList<String> filterToLeftFilter(String[] strings){
-////        for(String str : strings){
-////            try {
-////                PreparedStatement preparedStatement = connection.prepareStatement(
-////                        "SELECT * FROM internetshop.product\n" +
-////                                "INNER JOIN countries ON product.country_id=countries.country_id\n" +
-////                                "INNER JOIN cities ON product.city_id=cities.city_id\n" +
-////                                "INNER JOIN users ON product.author_id=users.id\n" +
-////                                "INNER JOIN colors ON product.color_id=colors.color_id\n" +
-////                                "INNER JOIN firms ON product.firm_id=firms.firm_id\n" +
-////                                "INNER JOIN `types` ON product.type_id=`types`.type_id\n" +
-////                                "WHERE product.color_id="+str+";"
-////                );
-////            } catch (SQLException e) {
-////                System.out.println("Error in ");
-////            }
-////
-////
-////        }
-//
-//        return null;
-//    }
-
-    public ArrayList<String> getRecurringItemFromTwoArray(String[] str1,String[] str2){
-        ArrayList<String> arrayList = new ArrayList<String>();
-        for(String s1 : str1)
-            for (String s2 : str2)
-                if (s1.equals(s2))
-                    arrayList.add(s1);
-        return arrayList;
-    }
 }

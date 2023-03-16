@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .location-center {
+            text-align: center;
+        }
+        .color-red{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div class="location-center">
+    <form th:method="POST" th:action="@{/store/{userId}/purchasedItem/{itemId}(itemId=${idItem}, userId=${idUser})}" th:object="${bankCard}" >
+        <h1>Enter to purchase the product</h1>
+        <br>
+        <br>
+        <label for="code">Enter card code: </label>
+        <input type="text" th:field="*{code}" id="code">
+        <div class="color-red" th:if="${#fields.hasErrors('code')}" th:errors="*{code}">Name error</div>
+        <br>
+        <br>
+        <label for="cvc">Enter cvc: </label>
+        <input type="text" th:field="*{cvc}" id="cvc">
+        <div class="color-red" th:if="${#fields.hasErrors('cvc')}" th:errors="*{cvc}">Name error</div>
+        <br>
+        <br>
+        <input type="submit" value="Buy!">
+    </form>
+
+
+</div>
+
+</body>
+</html>
