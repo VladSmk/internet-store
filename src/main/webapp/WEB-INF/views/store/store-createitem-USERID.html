@@ -38,7 +38,9 @@
     <br>
     <br>
     <label for="pColor">Enter color: </label>
-    <input type="text" th:field="*{color_id}" id="pColor">
+    <select th:field="*{color_id}" id="pColor">
+        <option th:each="color : ${listWithColors}" th:value="${color}" th:text="${color}"></option>
+    </select>
     <br>
     <br>
     <label for="pFirm">Enter firm: </label>
@@ -46,7 +48,9 @@
     <br>
     <br>
     <label for="pType">Enter type: </label>
-    <input type="text" th:field="*{type_id}" id="pType">
+    <select th:field="*{type_id}" id="pType">
+        <option th:each="type : ${listWithTypes}" th:value="${type}" th:text="${type}"></option>
+    </select>
     <br>
     <br>
     <input type="submit" value="Create!">

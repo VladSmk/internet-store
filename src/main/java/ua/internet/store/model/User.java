@@ -11,7 +11,7 @@ public class User {
     private String accountName;
     @Size(min = 6,  max = 20, message = "Password should be between 6 and 20 characters")
     private String accountPassword;
-    @Size(min = 0, max = 1000, message = "min age = 0")
+//    @Size(min = 1, max = 100, message = "min age = 0")
     private int accountAge;
     @NotEmpty(message = "not empty")
     private String accountPhoto;

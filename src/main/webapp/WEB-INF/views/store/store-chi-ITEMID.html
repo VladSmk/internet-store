@@ -40,16 +40,20 @@
         <input type="text" th:field="*{city_id}" id="aCity">
         <br>
         <br>
-        <label for="aColor">Enter Color: </label>
-        <input type="text" th:field="*{color_id}" id="aColor">
+        <label for="pColor">Enter color: </label>
+        <select th:field="*{color_id}" id="pColor">
+            <option th:each="color : ${listWithColors}" th:value="${color}" th:text="${color}"></option>
+        </select>
         <br>
         <br>
         <label for="aFirm">Enter Firm: </label>
         <input type="text" th:field="*{firm_id}" id="aFirm">
         <br>
         <br>
-        <label for="aType">Enter Type: </label>
-        <input type="text" th:field="*{type_id}" id="aType">
+        <label for="pType">Enter type: </label>
+        <select th:field="*{type_id}" id="pType">
+            <option th:each="type : ${listWithTypes}" th:value="${type}" th:text="${type}"></option>
+        </select>
         <br>
         <br>
         <input type="submit" value="Save!">

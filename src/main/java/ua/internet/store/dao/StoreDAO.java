@@ -1,21 +1,13 @@
 package ua.internet.store.dao;
-
-import com.mysql.cj.jdbc.CallableStatementWrapper;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.stereotype.Component;
-import ua.internet.store.model.LeftFilter;
 import ua.internet.store.model.Product;
 import ua.internet.store.model.UpperFilter;
 import ua.internet.store.model.User;
-
 import java.sql.*;
 import java.util.ArrayList;
-
 @Component
 public class StoreDAO {
-
     private static Connection connection = null;
-
     static {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");

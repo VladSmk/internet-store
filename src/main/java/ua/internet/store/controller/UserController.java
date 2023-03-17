@@ -21,13 +21,11 @@ public class UserController {
         this.userDAO = userDAO;
     }
 
-
     @GetMapping("/signIn")
     public String UserSignIn(Model model){
         model.addAttribute("testingUser", new User());
         return "user/user-sign-in";
     }
-
     @GetMapping("/postUserSignIn")
     public String postUserSignIn(@ModelAttribute("testingUser") User user){
         if(userDAO.signInAccountWithDb(user)) {
@@ -38,29 +36,24 @@ public class UserController {
             return "redirect:/user/signIn";
         }
     }
-
     @GetMapping("/signUp")
     public String UserSignUp(Model model){
         model.addAttribute("newUser", new User());
         return "user/user-sign-up";
     }
-
-    @PostMapping("/postUserSignUp/{userId}")
-    public String postUserSignUp(@PathVariable("userId") int userId,
-                                 @ModelAttribute("newUser") @Valid User user, BindingResult bindingResult){
+    @PostMapping("/postUserSignUp")
+    public String postUserSignUp(@ModelAttribute("newUser") @Valid User user, BindingResult bindingResult){
         if (bindingResult.hasErrors())
             return "user/user-sign-up";
 
         userDAO.signUpNewAccountInDb(user);
-        return "redirect:/store/"+userId;
+        return "redirect:/store";
     }
-
     @GetMapping("/settings/{userId}")
     public String settingsPageForSomeUser(@PathVariable("userId") int userId, Model model){
         model.addAttribute("chosenUser", userDAO.searchAccountById(userId));
         return "user/user-settings-USERID";
     }
-
     @GetMapping("/registration")
     public String userRegistration(){
         return "user/user-signIn-or-Up";
@@ -72,15 +65,12 @@ public class UserController {
         userDAO.addProductToBasket(userId, itemId);
         return "redirect:/store/"+userId+"/lookItem/"+itemId;
     }
-
     @DeleteMapping("/deleteItemInBasket/{userId}/{itemId}")
     public String deleteItemInBasket(@PathVariable("userId") int userId,
                                      @PathVariable("itemId") int itemId){
         userDAO.deleteProductFromBasket(userId, itemId);
         return "redirect:/store/"+userId+"/lookItem/"+itemId;
     }
-
-
     @DeleteMapping("/deleteAccount/{userId}/")
     public String deleteItemInBasket(@ModelAttribute("newUser") User user,
                                      @PathVariable("userId") int userId){
@@ -90,14 +80,12 @@ public class UserController {
         }
         return "redirect:/user/settings/"+userId;
     }
-
     @GetMapping("/deleteAccount/{userId}")
     public String deleteAccount(@PathVariable("userId") int userId, Model model){
         model.addAttribute("user", userDAO.searchAccountById(userId));
         model.addAttribute("chosenUser", userDAO.searchAccountById(userId));
         return "user/user-deleteAccount-USERID";
     }
-
     @DeleteMapping("/deleteAccount/{userId}")
     public String finalDeleteAccount(@ModelAttribute("user") User user,
                                      @PathVariable("userId") int userId){
@@ -106,9 +94,6 @@ public class UserController {
         else
             return "redirect:/user/deleteAccount"+userId;
     }
-
-
-
     private boolean PasswordIs = true;
     @GetMapping("/chp/{userId}")
     public String userSettingChangePassword(@PathVariable("userId") int userId, Model model){
@@ -127,14 +112,11 @@ public class UserController {
             return "redirect:/user/chp/"+userId;
         }
     }
-
-
     @GetMapping("/chu/{userId}")
     public String postSettingChangeUser(@PathVariable("userId") int userId, Model model){
         model.addAttribute("newUser", userDAO.searchAccountById(userId));
         return "user/user-chu-USERID";
     }
-
     @PatchMapping("/changeUser/{userId}")
     public String postUserSettingChangeUser(@PathVariable("userId") int userId,
                                             @ModelAttribute("newUser") User user, BindingResult bindingResult) {
@@ -145,6 +127,4 @@ public class UserController {
         userDAO.updateUserInDb(user);
         return "redirect:/user/settings/"+userId;
     }
-
-
 }

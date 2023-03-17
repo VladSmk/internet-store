@@ -32,10 +32,13 @@
                 padding-left: 50px;
             }
             .location-center-370px{
-                margin-left: 300px;
+                display: block;
+                margin: 0 auto;
+                text-align: center;
+                width: 50%;
             }
             .location-center-250px{
-                margin-left: 250px;
+                margin-left: 50px;
             }
             .buttons{
                 padding-top: 30px;
@@ -50,7 +53,7 @@
                 margin-left: 670px;
             }
             .width-100{
-                width: 100px;
+                width: 130px;
             }
 
 
@@ -92,7 +95,7 @@
         <div class="in-one-line location-center-250px">
 
 
-            <div class="padding-left-30">
+            <div class="padding-left-30 ">
                 <label for="minPrice">MinPrice: </label>
                 <br>
                 <input class="width-100" type="text" th:field="*{minPrice}" id="minPrice">
@@ -105,42 +108,42 @@
             <div class="padding-left-30">
                 <a>Type: </a>
                 <br>
-                <select th:field="*{type}">
+                <select class="width-100" th:field="*{type}">
                     <option th:each="type : ${listWithTypes}" th:value="${type}" th:text="${type}"></option>
                 </select>
             </div>
             <div class="padding-left-30">
                 <a>Country: </a>
                 <br>
-                <select th:field="*{country}">
+                <select class="width-100" th:field="*{country}">
                     <option th:each="country : ${listWithCountries}" th:value="${country}" th:text="${country}"></option>
                 </select>
             </div>
             <div class="padding-left-30">
                 <a>City: </a>
                 <br>
-                <select th:field="*{city}">
+                <select class="width-100" th:field="*{city}">
                     <option th:each="city : ${listWithCities}" th:value="${city}" th:text="${city}"></option>
                 </select>
             </div>
             <div class="padding-left-30">
                 <a>Author: </a>
                 <br>
-                <select th:field="*{author}">
+                <select class="width-100" th:field="*{author}">
                     <option th:each="author : ${listWithAuthors}" th:value="${author}" th:text="${author}"></option>
                 </select>
             </div>
             <div class="padding-left-30">
                 <a>Firm: </a>
                 <br>
-                <select th:field="*{firm}">
+                <select class="width-100" th:field="*{firm}">
                     <option th:each="firm : ${listWithFirms}" th:value="${firm}" th:text="${firm}"></option>
                 </select>
             </div>
             <div class="padding-left-30">
                 <a>Color: </a>
                 <br>
-                <select th:field="*{color}">
+                <select class="width-100" th:field="*{color}">
                     <option th:each="color : ${listWithColors}" th:value="${color}" th:text="${color}"></option>
                 </select>
             </div>
@@ -155,7 +158,7 @@
     <br>
     <div class="location-center-370px">
         <div class="in-one-line">
-            <div class="padding-left-200">
+            <div>
                 <div th:each="pitem : ${firstColumn}">
                     <form class="button-padding" th:action="@{/store/lookItem/{itemId}(itemId=${pitem.getId()})}">
                         <div class="buttons">
@@ -186,5 +189,5 @@
     </div>
 
 
-    <img src="../../../../resources/static/img/picture.jpg"/></body>
+    </body>
 </html>

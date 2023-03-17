@@ -6,12 +6,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.internet.store.dao.StoreDAO;
 import ua.internet.store.model.BankCard;
-import ua.internet.store.model.LeftFilter;
 import ua.internet.store.model.Product;
 import ua.internet.store.model.UpperFilter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 @Controller
 @RequestMapping("/store")
@@ -24,6 +22,7 @@ public class StoreController {
     private static ArrayList<Product> arrayListToStore = new ArrayList<Product>();
     private static UpperFilter staticUpperFilter = new UpperFilter("-", "-", "-", "-","-","-");
     private static boolean oneTimeUsage = true;
+
     @GetMapping()
     public String storeFirstPage(Model model){
         model.addAttribute("listWithCountries", storeDAO.getAllNamesFromTable(
@@ -54,13 +53,13 @@ public class StoreController {
             arrayListToStore = storeDAO.findAllProduct();
             oneTimeUsage=false;
         }
+
         model.addAttribute("firstColumn", storeDAO.arrayOfThreeList(arrayListToStore)[0]);
         model.addAttribute("secondColumn", storeDAO.arrayOfThreeList(arrayListToStore)[1]);
         model.addAttribute("thirdColumn", storeDAO.arrayOfThreeList(arrayListToStore)[2]);
         model.addAttribute("upperFilter", staticUpperFilter);
         return "store/store";
     }
-
     @PostMapping("/postUpperFilter")
     public String postProductAfterUpperFilter(@ModelAttribute("storeInput") UpperFilter upperFilter){
         staticUpperFilter=upperFilter;
@@ -169,6 +168,16 @@ public class StoreController {
     public String storeCreateItem(@PathVariable("userId") int userId, Model model){
         model.addAttribute("newProduct", new Product());
         model.addAttribute("idUser", userId);
+
+        model.addAttribute("listWithColors", storeDAO.getAllNamesFromTable(
+                "colors",
+                "color"
+        ));
+        model.addAttribute("listWithTypes", storeDAO.getAllNamesFromTable(
+                "types",
+                "type"
+        ));
+
         return "store/store-createitem-USERID";
     }
     @PostMapping("/postCreateProduct/{userId}")
@@ -183,6 +192,14 @@ public class StoreController {
 
         model.addAttribute("wantedProduct", storeDAO.searchProductById(itemId));
         model.addAttribute("itemId", itemId);
+        model.addAttribute("listWithColors", storeDAO.getAllNamesFromTable(
+                "colors",
+                "color"
+        ));
+        model.addAttribute("listWithTypes", storeDAO.getAllNamesFromTable(
+                "types",
+                "type"
+        ));
         return "store/store-chi-ITEMID";
     }
     @PatchMapping("/patchEditProduct/{itemId}")
@@ -192,6 +209,7 @@ public class StoreController {
         product.setAuthor_id(String.valueOf(storeDAO.getProductAuthorIdByProductId(itemId)));
 
         storeDAO.editProductInDb(product);
+        arrayListToStore = storeDAO.findAllProduct();
         return "redirect:/store/"+product.getAuthor_id();
     }
     @DeleteMapping("/deleteMyItem/{itemId}")

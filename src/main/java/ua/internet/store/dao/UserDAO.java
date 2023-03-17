@@ -1,10 +1,8 @@
 package ua.internet.store.dao;
-
 import org.springframework.stereotype.Component;
 import ua.internet.store.model.User;
 import ua.internet.store.model.UserPassword;
 import java.sql.*;
-
 @Component
 public class UserDAO {
     private static Connection connection = null;
