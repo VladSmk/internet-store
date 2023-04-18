@@ -23,6 +23,12 @@ public class StoreController {
     private static UpperFilter staticUpperFilter = new UpperFilter("-", "-", "-", "-","-","-");
     private static boolean oneTimeUsage = true;
 
+
+    @GetMapping("/test")
+    public String testPage(){
+        return "static/test";
+    }
+
     @GetMapping()
     public String storeFirstPage(Model model){
         model.addAttribute("listWithCountries", storeDAO.getAllNamesFromTable(

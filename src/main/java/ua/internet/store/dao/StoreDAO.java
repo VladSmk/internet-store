@@ -1,12 +1,25 @@
 package ua.internet.store.dao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import ua.internet.store.mapper.ProductMapper;
 import ua.internet.store.model.Product;
 import ua.internet.store.model.UpperFilter;
 import ua.internet.store.model.User;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class StoreDAO {
+
+    public final JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public StoreDAO(JdbcTemplate jdbcTemplate){
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     private static Connection connection = null;
     static {
         try {
@@ -147,7 +160,6 @@ public class StoreDAO {
     }
     public void saveProductInDb(Product product){
 
-
         try {
             PreparedStatement finalPreparedStatement = connection.prepareStatement(
                     "INSERT INTO internetshop.product" +
@@ -223,17 +235,6 @@ public class StoreDAO {
 
     }
     public void editProductInDb(Product product){
-//        System.out.println("id: "+product.getId());
-//        System.out.println("name: "+product.getName());
-//        System.out.println("desc: "+product.getDescription());
-//        System.out.println("price: "+product.getPrice());
-//        System.out.println("firm: "+product.getFirm_id());
-//        System.out.println("color: "+product.getColor_id());
-//        System.out.println("city: "+product.getCity_id());
-//        System.out.println("country: "+product.getCountry_id());
-//        System.out.println("photo: "+product.getPhoto());
-//        System.out.println("author: "+product.getAuthor_id());
-//        System.out.println("type: "+product.getType_id());
         try {
             PreparedStatement finalPreparedStatement = connection.prepareStatement(
                     "UPDATE internetshop.product SET `name`=?, `description`=?, `price`=?, `country_id`=?,\n" +
@@ -340,37 +341,12 @@ public class StoreDAO {
         }
         return 0;
     }
-    public ArrayList<Product> listProductByAuthorId(int authorId){
-        try {
-            ArrayList<Product> arrayList = new ArrayList<Product>();
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "SELECT * FROM internetshop.product WHERE author_id=?;"
-            );
-            preparedStatement.setInt(1, authorId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()){
-                Product product = new Product();
-                product.setId(resultSet.getInt("id"));
-                product.setName(resultSet.getString("name"));
-                product.setPrice(resultSet.getDouble("price"));
-                arrayList.add(product);
-            }
-            return arrayList;
-        } catch (SQLException e) {
-            System.out.println("Error listProductByAuthorId(StoreDAO)");
-        }
-        return null;
+    public List<Product> listProductByAuthorId(int authorId){
+        return jdbcTemplate.query("SELECT * FROM internetshop.product WHERE author_id=?;", new Object[]{authorId}, new ProductMapper());
     }
     public void deleteMyItemFromDb(int productId){
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "DELETE FROM internetshop.product WHERE id=?;"
-            );
-            preparedStatement.setInt(1, productId);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("Error in deleteMyItemFromDb");
-        }
+        jdbcTemplate.update("DELETE FROM internetshop.basket WHERE product_id=?;", productId);
+        jdbcTemplate.update("DELETE FROM internetshop.product WHERE id=?;", productId);
     }
     public int getProductAuthorIdByProductId(int productId){
         try {

@@ -133,6 +133,7 @@ public class UserDAO {
         }
     }
     public void deleteAccountFromDb(int userId){
+        System.out.println(userId);
         try {
             PreparedStatement preparedStatement2 = connection.prepareStatement(
                     "DELETE FROM internetshop.basket WHERE user_id=?;"

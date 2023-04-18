@@ -167,7 +167,7 @@
 <br>
 <div class="location-center-370px">
     <div class="in-one-line">
-        <div class="padding-left-200">
+        <div>
             <div th:each="pitem : ${firstColumn}">
                 <form class="button-padding" th:action="@{/store/{uId}/lookItem/{itemId}(itemId=${pitem.getId()}, uId=${userId})}">
                     <div class="buttons">
