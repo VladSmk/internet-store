@@ -1,6 +1,8 @@
 package ua.internet.store.dao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 import ua.internet.store.mapper.ProductMapper;
 import ua.internet.store.model.Product;
@@ -12,9 +14,7 @@ import java.util.List;
 
 @Component
 public class StoreDAO {
-
     public final JdbcTemplate jdbcTemplate;
-
     @Autowired
     public StoreDAO(JdbcTemplate jdbcTemplate){
         this.jdbcTemplate = jdbcTemplate;
@@ -41,41 +41,35 @@ public class StoreDAO {
     }
 
     public ArrayList<Product> findAllProduct(){
-        ArrayList<Product> list = new ArrayList<Product>();
-        Statement statement = null;
-        ResultSet resultSet = null;
-        try {
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(
-                        "SELECT * FROM internetshop.product\n" +
-                            "INNER JOIN countries ON product.country_id=countries.country_id \n " +
-                            "INNER JOIN cities ON product.city_id=cities.city_id \n " +
-                            "INNER JOIN users ON product.author_id=users.id \n " +
-                            "INNER JOIN colors ON product.color_id=colors.color_id \n " +
-                            "INNER JOIN firms ON product.firm_id=firms.firm_id \n " +
-                            "INNER JOIN `types` ON product.type_id=`types`.type_id;"
-            );
-            while (resultSet.next()){
-                Product product = new Product();
-                product.setId(resultSet.getInt("id"));
-                product.setName(resultSet.getString("name"));
-                product.setDescription(resultSet.getString("description"));
-                product.setPrice(resultSet.getDouble("price"));
-                product.setCountry_id(resultSet.getString("country"));
-                product.setCity_id(resultSet.getString("city"));
-                product.setPhoto(resultSet.getString("photo"));
-                product.setAuthor_id(resultSet.getString("username"));
-                product.setColor_id(resultSet.getString("color"));
-                product.setFirm_id(resultSet.getString("firm"));
-                product.setType_id(resultSet.getString("type"));
-                list.add(product);
+        return jdbcTemplate.query("SELECT * FROM internetshop.product\n" +
+                "INNER JOIN countries ON product.country_id=countries.country_id \n " +
+                "INNER JOIN cities ON product.city_id=cities.city_id \n " +
+                "INNER JOIN users ON product.author_id=users.id \n " +
+                "INNER JOIN colors ON product.color_id=colors.color_id \n " +
+                "INNER JOIN firms ON product.firm_id=firms.firm_id \n " +
+                "INNER JOIN types ON product.type_id=types.type_id;", new ResultSetExtractor<ArrayList<Product>>() {
+            @Override
+            public ArrayList<Product> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+                ArrayList<Product> list = new ArrayList<Product>();
+                while (resultSet.next()){
+                    Product product = new Product();
+                    product.setId(resultSet.getInt("id"));
+                    product.setName(resultSet.getString("name"));
+                    product.setDescription(resultSet.getString("description"));
+                    product.setPrice(resultSet.getDouble("price"));
+                    product.setCountry_id(resultSet.getString("country"));
+                    product.setCity_id(resultSet.getString("city"));
+                    product.setPhoto(resultSet.getString("photo"));
+                    product.setAuthor_id(resultSet.getString("username"));
+                    product.setColor_id(resultSet.getString("color"));
+                    product.setFirm_id(resultSet.getString("firm"));
+                    product.setType_id(resultSet.getString("type"));
+                    list.add(product);
+                }
+                return list;
             }
-            return list;
-        } catch (SQLException e) {
-            System.out.println("Error in findAllProduct(StoreDAO)");
-            throw new RuntimeException(e);
-        }
-    }
+        });
+    } //+
     public ArrayList<Product>[] arrayOfThreeList(ArrayList<Product> prodArrList){
         ArrayList<Product>[] arrayLists = new ArrayList[]{new ArrayList(), new ArrayList(), new ArrayList()};
         Product[] products = prodArrList.toArray(new Product[prodArrList.size()]);
@@ -91,73 +85,57 @@ public class StoreDAO {
         return arrayLists;
     }
     public User searchUserInDbById(int userId){
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "SELECT * FROM internetshop.users WHERE id=?;"
-            );
-            preparedStatement.setInt(1, userId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            User wantedUser = new User();
-            wantedUser.setAccountId(resultSet.getInt("id"));
-            wantedUser.setAccountName(resultSet.getString("username"));
-            wantedUser.setAccountPassword(resultSet.getString("password"));
-            wantedUser.setAccountAge(resultSet.getInt("age"));
-            wantedUser.setAccountBio(resultSet.getString("bio"));
-            wantedUser.setAccountPhoto(resultSet.getString("photo"));
-            return wantedUser;
-        } catch (SQLException e) {
-            System.out.println("Error in searchUserInDbById(StoreDAO)");
-            throw new RuntimeException(e);
-        }
-    }
+        return jdbcTemplate.query("SELECT * FROM internetshop.users WHERE id=?;", new Object[]{userId}, new ResultSetExtractor<User>() {
+            @Override
+            public User extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+                resultSet.next();
+                User wantedUser = new User();
+                wantedUser.setAccountId(resultSet.getInt("id"));
+                wantedUser.setAccountName(resultSet.getString("username"));
+                wantedUser.setAccountPassword(resultSet.getString("password"));
+                wantedUser.setAccountAge(resultSet.getInt("age"));
+                wantedUser.setAccountBio(resultSet.getString("bio"));
+                wantedUser.setAccountPhoto(resultSet.getString("photo"));
+                return wantedUser;
+            }
+        });
+    } //+
     public Product searchProductById(int productId){
-        try {
-            PreparedStatement preparedstatement = connection.prepareStatement(
-                    "SELECT * FROM internetshop.product\n" +
-                            "INNER JOIN countries ON product.country_id=countries.country_id\n" +
-                            "INNER JOIN cities ON product.city_id=cities.city_id \n" +
-                            "INNER JOIN users ON product.author_id=users.id\n" +
-                            "INNER JOIN colors ON product.color_id=colors.color_id\n" +
-                            "INNER JOIN firms ON product.firm_id=firms.firm_id\n" +
-                            "INNER JOIN `types` ON product.type_id=`types`.type_id\n" +
-                            "WHERE product.id=?;"
-            );
-            preparedstatement.setInt(1, productId);
-            ResultSet resultSet = preparedstatement.executeQuery();
-            resultSet.next();
-            Product product = new Product();
-            product.setId(resultSet.getInt("id"));
-            product.setName(resultSet.getString("name"));
-            product.setDescription(resultSet.getString("description"));
-            product.setPrice(resultSet.getDouble("price"));
-            product.setCountry_id(resultSet.getString("country"));
-            product.setCity_id(resultSet.getString("city"));
-            product.setPhoto(resultSet.getString("photo"));
-            product.setAuthor_id(resultSet.getString("username"));
-            product.setColor_id(resultSet.getString("color"));
-            product.setFirm_id(resultSet.getString("firm"));
-            product.setType_id(resultSet.getString("type"));
-            return product;
-        } catch (SQLException e) {
-            System.out.println("Error in searchProductById(StoreDAO)");
-            throw new RuntimeException(e);
-        }
-    }
+        return jdbcTemplate.query("SELECT * FROM internetshop.product\n" +
+                "INNER JOIN countries ON product.country_id=countries.country_id\n" +
+                "INNER JOIN cities ON product.city_id=cities.city_id \n" +
+                "INNER JOIN users ON product.author_id=users.id\n" +
+                "INNER JOIN colors ON product.color_id=colors.color_id\n" +
+                "INNER JOIN firms ON product.firm_id=firms.firm_id\n" +
+                "INNER JOIN types ON product.type_id=types.type_id\n" +
+                "WHERE product.id=?;", new ResultSetExtractor<Product>() {
+            @Override
+            public Product extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+                resultSet.next();
+                Product product = new Product();
+                product.setId(resultSet.getInt("id"));
+                product.setName(resultSet.getString("name"));
+                product.setDescription(resultSet.getString("description"));
+                product.setPrice(resultSet.getDouble("price"));
+                product.setCountry_id(resultSet.getString("country"));
+                product.setCity_id(resultSet.getString("city"));
+                product.setPhoto(resultSet.getString("photo"));
+                product.setAuthor_id(resultSet.getString("username"));
+                product.setColor_id(resultSet.getString("color"));
+                product.setFirm_id(resultSet.getString("firm"));
+                product.setType_id(resultSet.getString("type"));
+                return product;
+            }
+        });
+    } //+
     public boolean checkProductInBasket(int userId, int itemId){
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "SELECT * FROM internetshop.basket WHERE user_id=? and product_id=?;"
-            );
-            preparedStatement.setInt(1, userId);
-            preparedStatement.setInt(2, itemId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.next();
-        } catch (SQLException e) {
-            System.out.println("Error in checkProductInBasket(StoreDAO)");
-            throw new RuntimeException(e);
-        }
-    }
+        return jdbcTemplate.query("SELECT * FROM internetshop.basket WHERE user_id=? and product_id=?;", new Object[]{userId, itemId}, new ResultSetExtractor<Boolean>() {
+            @Override
+            public Boolean extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+                return resultSet.next();
+            }
+        });
+    }  //+
     public void saveProductInDb(Product product){
 
         try {
@@ -343,11 +321,11 @@ public class StoreDAO {
     }
     public List<Product> listProductByAuthorId(int authorId){
         return jdbcTemplate.query("SELECT * FROM internetshop.product WHERE author_id=?;", new Object[]{authorId}, new ProductMapper());
-    }
+    } //+
     public void deleteMyItemFromDb(int productId){
         jdbcTemplate.update("DELETE FROM internetshop.basket WHERE product_id=?;", productId);
         jdbcTemplate.update("DELETE FROM internetshop.product WHERE id=?;", productId);
-    }
+    } //+
     public int getProductAuthorIdByProductId(int productId){
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -362,24 +340,20 @@ public class StoreDAO {
             System.out.println("Error in getProductAuthorIdByProductName(StoreDAO)");
         }
         return 0;
+//        return jdbcTemplate.query("SELECT * FROM internetshop.product WHERE product.id=?;", new Object[]{productId}, new int[]);
     }
-    public ArrayList<String> getAllNamesFromTable(String tableName, String columnName){
-        try {
-            ArrayList<String> arrayList = new ArrayList<String>();
-            arrayList.add("-");
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "SELECT * FROM internetshop."+tableName+";"
-            );
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
-                arrayList.add(resultSet.getString(columnName));
+    public List<String> getAllNamesFromTable(String tableName, final String columnName){
+        return jdbcTemplate.query("SELECT * FROM "+tableName+";",  new ResultSetExtractor<List<String>>() {
+            @Override
+            public List<String> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+                List<String> list = new ArrayList<String>();
+                list.add("-");
+                while(resultSet.next())
+                    list.add(resultSet.getString(columnName));
+                return list;
             }
-            return arrayList;
-        } catch (SQLException e) {
-            System.out.println("Error in getAllNamesFromTable(StoreDAO)");
-        }
-        return null;
-    }
+        });
+    } //+
     public ArrayList<Product> getProductsAfterFiltering(UpperFilter upperFilter){
         try {
             String author_id, type_id, country_id, city_id, color_id, firm_id;
