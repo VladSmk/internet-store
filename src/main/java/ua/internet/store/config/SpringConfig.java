@@ -5,6 +5,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -19,11 +21,13 @@ import javax.sql.DataSource;
 @EnableWebMvc
 @Configuration
 @ComponentScan("ua.internet.store")
+@PropertySource("classpath:database.properties")
 public class SpringConfig implements WebMvcConfigurer {
     private final ApplicationContext applicationContext;
-
+    private final Environment environment;
     @Autowired
-    public SpringConfig(ApplicationContext applicationContext) {
+    public SpringConfig(Environment environment, ApplicationContext applicationContext) {
+        this.environment = environment;
         this.applicationContext = applicationContext;
     }
 
@@ -55,10 +59,10 @@ public class SpringConfig implements WebMvcConfigurer {
     public DataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/internetshop");
-        dataSource.setUsername("root");
-        dataSource.setPassword("p@ssw0rd");
+        dataSource.setDriverClassName(environment.getProperty("db_driver"));
+        dataSource.setUrl(environment.getProperty("db_url"));
+        dataSource.setUsername(environment.getProperty("db_username"));
+        dataSource.setPassword(environment.getProperty("db_password"));
 
         return dataSource;
     }

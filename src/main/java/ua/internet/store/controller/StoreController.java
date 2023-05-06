@@ -10,7 +10,6 @@ import ua.internet.store.model.Product;
 import ua.internet.store.model.UpperFilter;
 
 import java.util.ArrayList;
-
 @Controller
 @RequestMapping("/store")
 public class StoreController {
@@ -22,13 +21,6 @@ public class StoreController {
     private static ArrayList<Product> arrayListToStore = new ArrayList<Product>();
     private static UpperFilter staticUpperFilter = new UpperFilter("-", "-", "-", "-","-","-");
     private static boolean oneTimeUsage = true;
-
-
-    @GetMapping("/test")
-    public String testPage(){
-        return "static/test";
-    }
-
     @GetMapping()
     public String storeFirstPage(Model model){
         model.addAttribute("listWithCountries", storeDAO.getAllNamesFromTable(
@@ -59,7 +51,6 @@ public class StoreController {
             arrayListToStore = storeDAO.findAllProduct();
             oneTimeUsage=false;
         }
-
         model.addAttribute("firstColumn", storeDAO.arrayOfThreeList(arrayListToStore)[0]);
         model.addAttribute("secondColumn", storeDAO.arrayOfThreeList(arrayListToStore)[1]);
         model.addAttribute("thirdColumn", storeDAO.arrayOfThreeList(arrayListToStore)[2]);
@@ -123,6 +114,9 @@ public class StoreController {
                 "users",
                 "username"
         ));
+
+        
+
         if(oneTimeUsage) {
             arrayListToStore = storeDAO.findAllProduct();
             oneTimeUsage=false;
@@ -155,7 +149,6 @@ public class StoreController {
         return "store/store-lookitem-ITEMID";
     }
     @GetMapping("/{userId}/lookItem/{itemId}")
-
     public String storeUserLookItem(@PathVariable("itemId") int itemId,
                                     @PathVariable("userId") int userid,
                                     Model model){

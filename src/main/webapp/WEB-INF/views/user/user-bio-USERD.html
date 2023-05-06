@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UserBio</title>
+    <style>
+        .location-center{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="location-center">
+    <h1>UserBio</h1>
+    <br>
+    <br>
+    User name: <a th:text="${selectedUser.getAccountName()}"></a>
+    <br>
+    <br>
+    User age: <a th:text="${selectedUser.getAccountAge()}"></a>
+    <br>
+    <br>
+    User bio: <a th:text="${selectedUser.getAccountBio()}"></a>
+    <br>
+    <br>
+    User photo: <a th:text="${selectedUser.getAccountPhoto()}"></a>
+    <br>
+    <br>
+    <form th:action="@{/}">
+        <input type="submit" value="message">
+    </form>
+
+</div>
+
+</body>
+</html>

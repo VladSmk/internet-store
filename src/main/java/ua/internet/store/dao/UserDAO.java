@@ -1,10 +1,24 @@
 package ua.internet.store.dao;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import ua.internet.store.mapper.UserMapper;
 import ua.internet.store.model.User;
 import ua.internet.store.model.UserPassword;
+
 import java.sql.*;
+import java.util.List;
+
 @Component
 public class UserDAO {
+
+    public final JdbcTemplate jdbcTemplate;
+    @Autowired
+    public UserDAO(JdbcTemplate jdbcTemplate){
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     private static Connection connection = null;
 
     static {
@@ -140,20 +154,21 @@ public class UserDAO {
             );
             preparedStatement2.setInt(1, userId);
             preparedStatement2.executeUpdate();
-
+            System.out.println("YES1");
 
             PreparedStatement preparedStatement1 = connection.prepareStatement(
                     "DELETE FROM internetshop.product WHERE author_id=?;"
             );
             preparedStatement1.setInt(1, userId);
             preparedStatement1.executeUpdate();
-
+            System.out.println("YES2");
 
             PreparedStatement preparedStatement3 = connection.prepareStatement(
                     "DELETE FROM internetshop.users WHERE id=?;"
             );
             preparedStatement3.setInt(1, userId);
             preparedStatement3.executeUpdate();
+            System.out.println("YES3");
         } catch (SQLException e) {
             System.out.println("Error in deleteAccountFromDb(UserDAO)");
             throw new RuntimeException(e);
@@ -218,6 +233,10 @@ public class UserDAO {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public List<User> getListWithALLUsers (){
+        return jdbcTemplate.query("SELECT * FROM internetshop.users;", new UserMapper());
     }
 
 }

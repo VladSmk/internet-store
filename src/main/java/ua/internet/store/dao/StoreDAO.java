@@ -1,5 +1,7 @@
 package ua.internet.store.dao;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -8,17 +10,22 @@ import ua.internet.store.mapper.ProductMapper;
 import ua.internet.store.model.Product;
 import ua.internet.store.model.UpperFilter;
 import ua.internet.store.model.User;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class StoreDAO {
+
     public final JdbcTemplate jdbcTemplate;
     @Autowired
-    public StoreDAO(JdbcTemplate jdbcTemplate){
+    public StoreDAO(JdbcTemplate jdbcTemplate, Environment environment){
         this.jdbcTemplate = jdbcTemplate;
+        this.environment = environment;
     }
+
+    public final Environment environment;
 
     private static Connection connection = null;
     static {
@@ -40,6 +47,7 @@ public class StoreDAO {
         }
     }
 
+
     public ArrayList<Product> findAllProduct(){
         return jdbcTemplate.query("SELECT * FROM internetshop.product\n" +
                 "INNER JOIN countries ON product.country_id=countries.country_id \n " +
@@ -47,7 +55,7 @@ public class StoreDAO {
                 "INNER JOIN users ON product.author_id=users.id \n " +
                 "INNER JOIN colors ON product.color_id=colors.color_id \n " +
                 "INNER JOIN firms ON product.firm_id=firms.firm_id \n " +
-                "INNER JOIN types ON product.type_id=types.type_id;", new ResultSetExtractor<ArrayList<Product>>() {
+                "INNER JOIN `types` ON product.type_id=`types`.type_id;", new ResultSetExtractor<ArrayList<Product>>() {
             @Override
             public ArrayList<Product> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
                 ArrayList<Product> list = new ArrayList<Product>();
@@ -83,7 +91,7 @@ public class StoreDAO {
             }
         }
         return arrayLists;
-    }
+    } //+
     public User searchUserInDbById(int userId){
         return jdbcTemplate.query("SELECT * FROM internetshop.users WHERE id=?;", new Object[]{userId}, new ResultSetExtractor<User>() {
             @Override
@@ -107,8 +115,8 @@ public class StoreDAO {
                 "INNER JOIN users ON product.author_id=users.id\n" +
                 "INNER JOIN colors ON product.color_id=colors.color_id\n" +
                 "INNER JOIN firms ON product.firm_id=firms.firm_id\n" +
-                "INNER JOIN types ON product.type_id=types.type_id\n" +
-                "WHERE product.id=?;", new ResultSetExtractor<Product>() {
+                "INNER JOIN `types` ON product.type_id=`types`.type_id\n" +
+                "WHERE product.id=?;", new Object[]{productId}, new ResultSetExtractor<Product>() {
             @Override
             public Product extractData(ResultSet resultSet) throws SQLException, DataAccessException {
                 resultSet.next();
@@ -127,7 +135,7 @@ public class StoreDAO {
                 return product;
             }
         });
-    } //+
+    }
     public boolean checkProductInBasket(int userId, int itemId){
         return jdbcTemplate.query("SELECT * FROM internetshop.basket WHERE user_id=? and product_id=?;", new Object[]{userId, itemId}, new ResultSetExtractor<Boolean>() {
             @Override
@@ -135,8 +143,9 @@ public class StoreDAO {
                 return resultSet.next();
             }
         });
-    }  //+
+    } //+
     public void saveProductInDb(Product product){
+
 
         try {
             PreparedStatement finalPreparedStatement = connection.prepareStatement(
@@ -306,7 +315,7 @@ public class StoreDAO {
             throw new RuntimeException(e);
         }
     }
-    private static int returnsMaxIdFromTable(String tableName, String stringIdName){
+    private static int returnsMaxIdFromTable(String tableName, final String stringIdName){
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "SELECT MAX("+stringIdName+") FROM internetshop."+tableName+";"
@@ -318,9 +327,24 @@ public class StoreDAO {
             System.out.println("Error in returnsMaxIdFromTable(StoreDAO)");
         }
         return 0;
+//        return jdbcTemplate.query("SELECT MAX(" + stringIdName + ") FROM internetshop." + tableName + ";", new ResultSetExtractor<Integer>() {
+//            @Override
+//            public Integer extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+//                resultSet.next();
+//                return (resultSet.getInt("MAX("+stringIdName+")")) + 1;
+//            }
+//        });
     }
     public List<Product> listProductByAuthorId(int authorId){
-        return jdbcTemplate.query("SELECT * FROM internetshop.product WHERE author_id=?;", new Object[]{authorId}, new ProductMapper());
+        return jdbcTemplate.query("SELECT * FROM internetshop.product\n" +
+                "INNER JOIN countries ON product.country_id=countries.country_id\n" +
+                "INNER JOIN cities ON product.city_id=cities.city_id \n" +
+                "INNER JOIN users ON product.author_id=users.id\n" +
+                "INNER JOIN colors ON product.color_id=colors.color_id\n" +
+                "INNER JOIN firms ON product.firm_id=firms.firm_id\n" +
+                "INNER JOIN `types` ON product.type_id=`types`.type_id\n" +
+                "WHERE product.author_id=?;", new Object[]{authorId}, new ProductMapper()
+        );
     } //+
     public void deleteMyItemFromDb(int productId){
         jdbcTemplate.update("DELETE FROM internetshop.basket WHERE product_id=?;", productId);
@@ -340,8 +364,7 @@ public class StoreDAO {
             System.out.println("Error in getProductAuthorIdByProductName(StoreDAO)");
         }
         return 0;
-//        return jdbcTemplate.query("SELECT * FROM internetshop.product WHERE product.id=?;", new Object[]{productId}, new int[]);
-    }
+    } //+
     public List<String> getAllNamesFromTable(String tableName, final String columnName){
         return jdbcTemplate.query("SELECT * FROM "+tableName+";",  new ResultSetExtractor<List<String>>() {
             @Override
@@ -454,7 +477,7 @@ public class StoreDAO {
             System.out.println("Error in getProductsAfterFilter(StoreDAO)");
         }
         return null;
-    }
+    } //
     public ArrayList<Product> listProductByPartOfAuthorName(String partOfName){
         try {
             ArrayList<Product> productArrayList = new ArrayList<Product>();

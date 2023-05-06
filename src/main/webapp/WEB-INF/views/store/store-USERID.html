@@ -53,7 +53,7 @@
             margin-left: 670px;
         }
         .width-100{
-            width: 150px;
+            width: 120px;
         }
 
         .buttons{
@@ -70,6 +70,12 @@
         <a>Internet Store</a>
     </div>
     <div class="two-buttons-signIn-signUp">
+        <form class="button-padding" th:action="@{/user/chat}">
+            <input type="submit" value="Chat">
+        </form>
+        <form class="button-padding" th:action="@{/user/all}">
+            <input type="submit" value="Users">
+        </form>
         <form class="button-padding" th:action="@{/user/settings/{accId}(accId=${wantedUser.getAccountId()})}">
             <input type="submit" value="Account">
         </form>
@@ -80,7 +86,7 @@
             <input type="submit" value="My items for sale">
         </form>
     </div>
-    Username: <a th:text="${wantedUser.getAccountName()}">text</a>
+    User: <a th:text="${wantedUser.getAccountName()}">text</a>
 </div>
 
 
@@ -102,6 +108,7 @@
 <br>
 <form th:method="POST" th:action="@{/store/postUserUpperFilter/{userId}(userId=${idUser})}" th:object="${upperFilter}">
     <div class="in-one-line location-center-250px">
+
 
 
         <div class="padding-left-30">
@@ -168,6 +175,7 @@
 <div class="location-center-370px">
     <div class="in-one-line">
         <div>
+
             <div th:each="pitem : ${firstColumn}">
                 <form class="button-padding" th:action="@{/store/{uId}/lookItem/{itemId}(itemId=${pitem.getId()}, uId=${userId})}">
                     <div class="buttons">

@@ -11,7 +11,6 @@ import ua.internet.store.dao.BasketDAO;
 @Controller
 @RequestMapping("/basket")
 public class BasketController {
-
     private final BasketDAO basketDAO;
     @Autowired
     public BasketController(BasketDAO basketDAO) {
@@ -24,6 +23,4 @@ public class BasketController {
         model.addAttribute("idUser", userId);
         return "basket/basket-USERID";
     }
-
-
 }

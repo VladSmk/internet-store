@@ -1,6 +1,8 @@
 package ua.internet.store.dao;
+
 import org.springframework.stereotype.Component;
 import ua.internet.store.model.Product;
+
 import java.sql.*;
 import java.util.ArrayList;
 @Component

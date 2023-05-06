@@ -11,7 +11,6 @@ import ua.internet.store.model.UserPassword;
 
 import javax.validation.Valid;
 
-
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -20,7 +19,6 @@ public class UserController {
     public UserController(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
-
     @GetMapping("/signIn")
     public String UserSignIn(Model model){
         model.addAttribute("testingUser", new User());
@@ -89,8 +87,10 @@ public class UserController {
     @DeleteMapping("/deleteAccount/{userId}")
     public String finalDeleteAccount(@ModelAttribute("user") User user,
                                      @PathVariable("userId") int userId){
-        if (user.getAccountPassword().equals(userDAO.searchPasswordById(userId)))
+        if (user.getAccountPassword().equals(userDAO.searchPasswordById(userId))) {
+            userDAO.deleteAccountFromDb(userId);
             return "redirect:/store";
+        }
         else
             return "redirect:/user/deleteAccount"+userId;
     }
@@ -126,5 +126,17 @@ public class UserController {
         user.setAccountId(userId);
         userDAO.updateUserInDb(user);
         return "redirect:/user/settings/"+userId;
+    }
+
+    @GetMapping("/all")
+    public String allUsers (Model model){
+        model.addAttribute("userList", userDAO.getListWithALLUsers());
+        return "user/user-allUsers";
+    }
+
+    @GetMapping("/bio/{userId}")
+    public String userBio(@PathVariable("userId") int userId, Model model){
+        model.addAttribute("selectedUser", userDAO.searchAccountById(userId));
+        return "user/user-bio-USERD";
     }
 }

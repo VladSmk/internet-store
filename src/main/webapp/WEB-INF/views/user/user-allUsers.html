@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+    <style>
+        .location-center{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="location-center">
+    <h1>Users</h1>
+
+    <div th:each="user : ${userList}">
+        <form th:action="@{/user/bio/{userId}(userId=${user.getAccountId()})}">
+            <input type="submit" th:value="${user.getAccountName()}">
+            <br>
+            <br>
+        </form>
+    </div>
+</div>
+</body>
+</html>
